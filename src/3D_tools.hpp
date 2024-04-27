@@ -1,6 +1,7 @@
 #pragma once
 
 #define _USE_MATH_DEFINES
+#define GL_SILENCE_DEPRECATION
 #include "../third_party/glfw/include/GLFW/glfw3.h"
 #include <OpenGL/gl.h>
 #include <iostream>

@@ -13,6 +13,7 @@
 
 #include "3D_tools.hpp"
 #include "menu.hpp"
+#include "ball.hpp"
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1000;
@@ -155,6 +156,8 @@ int main(int /* argc */, char ** /* argv */)
 	glPointSize(5.0);
 	glEnable(GL_DEPTH_TEST);
 
+	Ball ball = Ball();
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -162,7 +165,7 @@ int main(int /* argc */, char ** /* argv */)
 		double startTime = glfwGetTime();
 
 		/* Cleaning buffers and setting Matrix Mode */
-		glClearColor(0.8, 0.8, 0.8, 1.0);
+		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if (flag_filaire)
@@ -189,29 +192,7 @@ int main(int /* argc */, char ** /* argv */)
 		/* Scene rendering */
 		draw_scene();
 
-		std::cout << choice << std::endl;
-
-		glPushMatrix();
-		{
-			glTranslatef(-2.5, 0, 5);
-			for (int y = 1; y < 3; y++)
-			{
-				for (int x = 0; x < 2; x++)
-				{
-					glPushMatrix();
-					{
-						glTranslatef(5 * x, 4 * -(y - 1), 0);
-						if (choice == x + y)
-						{
-							draw_hover_button();
-						}
-						draw_button();
-					}
-					glPopMatrix();
-				}
-			}
-		}
-		glPopMatrix();
+		ball.draw();
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

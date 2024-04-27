@@ -1,9 +1,9 @@
 #include "3D_tools.hpp"
 
 /* Camera parameters and functions */
-float theta = -90.f;	 // Angle between x axis and viewpoint
-float phy = 0.1f;		 // Angle between z axis and viewpoint
-float dist_zoom = 30.0f; // Distance between origin and viewpoint
+float theta = 0.1f;		 // Angle between x axis and viewpoint
+float phy = 90.f;		 // Angle between z axis and viewpoint
+float dist_zoom = 10.0f; // Distance between origin and viewpoint
 
 struct v3d
 {
