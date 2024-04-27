@@ -17,6 +17,7 @@
 #include "wall.hpp"
 #include "racket.hpp"
 #include <vector>
+#include "obstacle.hpp"
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1000;
@@ -31,6 +32,9 @@ static const double FRAMERATE_IN_SECONDS = 1. / 60.;
 static int flag_filaire = 0;
 static int flag_animate_rot_scale = 0;
 static int flag_animate_rot_arm = 0;
+
+/* Gameplay flags */
+static int flag_is_moving = 0;
 
 static int choice = 0;
 
@@ -126,6 +130,20 @@ void onKey(GLFWwindow *window, int key, int /* scancode */, int action, int /* m
 	}
 }
 
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
+		std::cout << "MOVE" << std::endl;
+		flag_is_moving = 1;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+	{
+		std::cout << "STOP" << std::endl;
+		flag_is_moving = 0;
+	}
+}
+
 static void cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
 {
 	int width, height;
@@ -170,6 +188,7 @@ int main(int /* argc */, char ** /* argv */)
 
 	glfwSetWindowSizeCallback(window, onWindowResized);
 	glfwSetKeyCallback(window, onKey);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 
 	onWindowResized(window, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -179,10 +198,16 @@ int main(int /* argc */, char ** /* argv */)
 
 	Ball ball = Ball();
 	std::vector<Wall> walls = {
-		Wall({-20.0, 10.0, 0.0}, {40.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}),
-		Wall({-20.0, -10.0, 0.0}, {40.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}),
-		Wall({-20.0, 0.0, 6.0}, {40.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}),
-		Wall({-20.0, 0.0, -6.0}, {40.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5})};
+		Wall({-500.0, 10.0, 0.0}, {1000.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}),
+		Wall({-500.0, -10.0, 0.0}, {1000.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}),
+		Wall({-500.0, 0.0, 6.0}, {1000.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}),
+		Wall({-500.0, 0.0, -6.0}, {1000.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5})};
+	std::vector<Obstacle> obstacles = {
+		Obstacle(-0.0),
+		Obstacle(-20.0),
+		Obstacle(-40.0),
+		Obstacle(-60.0),
+		Obstacle(-80.0)};
 	Racket racket = Racket();
 
 	/* Loop until the user closes the window */
@@ -225,6 +250,10 @@ int main(int /* argc */, char ** /* argv */)
 		{
 			wall.draw();
 		}
+		for (auto obstacle : obstacles)
+		{
+			obstacle.draw();
+		}
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
@@ -241,6 +270,17 @@ int main(int /* argc */, char ** /* argv */)
 		}
 
 		/* Animate scenery */
+		if (flag_is_moving)
+		{
+			for (auto &obstacle : obstacles)
+			{
+				obstacle.move(0.1);
+			}
+
+			obstacles.erase(std::remove_if(obstacles.begin(), obstacles.end(), [](const Obstacle &obstacle)
+										   { return obstacle.has_to_despawn(); }),
+							obstacles.end());
+		}
 	}
 
 	glfwTerminate();
