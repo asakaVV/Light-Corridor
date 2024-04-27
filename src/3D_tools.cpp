@@ -192,3 +192,13 @@ void drawSphere()
 		angle_theta += pas_angle_theta;
 	}
 }
+
+void drawEmptySquare()
+{
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(-0.5, -0.5, 0.0);
+	glVertex3f(0.5, -0.5, 0.0);
+	glVertex3f(0.5, 0.5, 0.0);
+	glVertex3f(-0.5, 0.5, 0.0);
+	glEnd();
+}

@@ -30,5 +30,7 @@ void drawCone();
 
 void drawSphere();
 
+void drawEmptySquare();
+
 /* Small tools */
 float toRad(float deg);
