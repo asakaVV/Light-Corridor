@@ -14,6 +14,8 @@
 #include "3D_tools.hpp"
 #include "menu.hpp"
 #include "ball.hpp"
+#include "wall.hpp"
+#include <vector>
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1000;
@@ -157,6 +159,11 @@ int main(int /* argc */, char ** /* argv */)
 	glEnable(GL_DEPTH_TEST);
 
 	Ball ball = Ball();
+	std::vector<Wall> walls = {
+		Wall({-20.0, 10.0, 0.0}, {40.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}),
+		Wall({-20.0, -10.0, 0.0}, {40.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}),
+		Wall({-20.0, 0.0, 6.0}, {40.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}),
+		Wall({-20.0, 0.0, -6.0}, {40.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5})};
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -193,6 +200,10 @@ int main(int /* argc */, char ** /* argv */)
 		draw_scene();
 
 		ball.draw();
+		for (auto wall : walls)
+		{
+			wall.draw();
+		}
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
