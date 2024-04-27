@@ -15,6 +15,7 @@
 #include "menu.hpp"
 #include "ball.hpp"
 #include "wall.hpp"
+#include "racket.hpp"
 #include <vector>
 
 /* Window properties */
@@ -32,6 +33,9 @@ static int flag_animate_rot_scale = 0;
 static int flag_animate_rot_arm = 0;
 
 static int choice = 0;
+
+static float pos_x = 0.0;
+static float pos_y = 0.0;
 
 /* Error handling function */
 void onError(int error, const char *description)
@@ -122,6 +126,20 @@ void onKey(GLFWwindow *window, int key, int /* scancode */, int action, int /* m
 	}
 }
 
+static void cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
+{
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+
+	std::cout << "xpos : " << xpos << " ypos : " << ypos << std::endl;
+
+	double normalized_xpos = 2.0 * xpos / width - 1.0;
+	double normalized_ypos = 1.0 - 2.0 * (ypos - 150) / 650;
+
+	pos_x = std::max(std::min(10.0 * normalized_xpos, 7.8), -7.8);
+	pos_y = std::max(std::min(-6.0 * normalized_ypos, 4.0), -4.0);
+}
+
 int main(int /* argc */, char ** /* argv */)
 {
 	/* GLFW initialisation */
@@ -152,6 +170,7 @@ int main(int /* argc */, char ** /* argv */)
 
 	glfwSetWindowSizeCallback(window, onWindowResized);
 	glfwSetKeyCallback(window, onKey);
+	glfwSetCursorPosCallback(window, cursor_position_callback);
 
 	onWindowResized(window, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -164,6 +183,7 @@ int main(int /* argc */, char ** /* argv */)
 		Wall({-20.0, -10.0, 0.0}, {40.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}),
 		Wall({-20.0, 0.0, 6.0}, {40.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}),
 		Wall({-20.0, 0.0, -6.0}, {40.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5})};
+	Racket racket = Racket();
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -198,7 +218,8 @@ int main(int /* argc */, char ** /* argv */)
 
 		/* Scene rendering */
 		draw_scene();
-
+		racket.move(pos_y, pos_x, 0.);
+		racket.draw();
 		ball.draw();
 		for (auto wall : walls)
 		{

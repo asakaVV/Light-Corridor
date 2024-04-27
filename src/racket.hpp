@@ -2,10 +2,12 @@
 
 #include "drawable.hpp"
 
-class Ball : public Drawable
+class Racket : public Drawable
 {
 public:
-    Ball();
+    Racket();
+
+    void move(float x, float y, float z);
 
     void draw() override;
 
