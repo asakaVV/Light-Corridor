@@ -35,6 +35,7 @@ static int flag_animate_rot_arm = 0;
 
 /* Gameplay flags */
 static int flag_is_moving = 0;
+static bool flag_is_grip = true;
 
 static int choice = 0;
 
@@ -142,14 +143,16 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 		std::cout << "STOP" << std::endl;
 		flag_is_moving = 0;
 	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	{
+		flag_is_grip = !flag_is_grip;
+	}
 }
 
 static void cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
 {
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
-
-	std::cout << "xpos : " << xpos << " ypos : " << ypos << std::endl;
 
 	double normalized_xpos = 2.0 * xpos / width - 1.0;
 	double normalized_ypos = 1.0 - 2.0 * (ypos - 150) / 650;
@@ -244,6 +247,15 @@ int main(int /* argc */, char ** /* argv */)
 		/* Scene rendering */
 		draw_scene();
 		racket.move(pos_y, pos_x, 0.);
+		if (!flag_is_grip)
+		{
+			ball.change_grip();
+			flag_is_grip = !flag_is_grip;
+		}
+		if (ball.get_grip())
+		{
+			ball.move(0., pos_x, -pos_y);
+		}
 		racket.draw();
 		ball.draw();
 		for (auto wall : walls)
