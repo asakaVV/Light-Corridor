@@ -22,7 +22,7 @@
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1000;
 static const unsigned int WINDOW_HEIGHT = 1000;
-static const char WINDOW_TITLE[] = "TD04 Ex01";
+static const char WINDOW_TITLE[] = "The Light Corridor";
 static float aspectRatio = 1.0;
 
 /* Minimal time wanted between two images */
@@ -145,7 +145,7 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 	}
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{
-		flag_is_grip = !flag_is_grip;
+		flag_is_grip = false;
 	}
 }
 
@@ -201,10 +201,10 @@ int main(int /* argc */, char ** /* argv */)
 
 	Ball ball = Ball();
 	std::vector<Wall> walls = {
-		Wall({-500.0, 10.0, 0.0}, {1000.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}),
-		Wall({-500.0, -10.0, 0.0}, {1000.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}),
-		Wall({-500.0, 0.0, 6.0}, {1000.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}),
-		Wall({-500.0, 0.0, -6.0}, {1000.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5})};
+		Wall({-500.0, 10.0, 0.0}, {1000.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}, Wall::WallType::RIGHT),
+		Wall({-500.0, -10.0, 0.0}, {1000.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}, Wall::WallType::LEFT),
+		Wall({-500.0, 0.0, 6.0}, {1000.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}, Wall::WallType::TOP),
+		Wall({-500.0, 0.0, -6.0}, {1000.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}, Wall::WallType::BOTTOM)};
 	std::vector<Obstacle> obstacles = {
 		Obstacle(-0.0),
 		Obstacle(-20.0),
@@ -246,16 +246,6 @@ int main(int /* argc */, char ** /* argv */)
 
 		/* Scene rendering */
 		draw_scene();
-		racket.move(pos_y, pos_x, 0.);
-		if (!flag_is_grip)
-		{
-			ball.change_grip();
-			flag_is_grip = !flag_is_grip;
-		}
-		if (ball.get_grip())
-		{
-			ball.move(0., pos_x, -pos_y);
-		}
 		racket.draw();
 		ball.draw();
 		for (auto wall : walls)
@@ -281,17 +271,37 @@ int main(int /* argc */, char ** /* argv */)
 			glfwWaitEventsTimeout(FRAMERATE_IN_SECONDS - elapsedTime);
 		}
 
-		/* Animate scenery */
+		// Move
+		racket.move(pos_y, pos_x, 0.);
+		if (ball.get_grip() && !flag_is_grip)
+		{
+			ball.set_grip(false);
+		}
+		if (ball.get_grip())
+		{
+			ball.move(0., pos_x, -pos_y);
+		}
+		else
+		{
+			ball.update();
+		}
 		if (flag_is_moving)
 		{
+			ball.move_with_delta(0.3);
 			for (auto &obstacle : obstacles)
 			{
-				obstacle.move(0.1);
+				obstacle.move(0.3);
 			}
 
 			obstacles.erase(std::remove_if(obstacles.begin(), obstacles.end(), [](const Obstacle &obstacle)
 										   { return obstacle.has_to_despawn(); }),
 							obstacles.end());
+		}
+
+		// Collision detection
+		for (auto &wall : walls)
+		{
+			wall.collide(ball);
 		}
 	}
 

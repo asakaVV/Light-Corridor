@@ -14,9 +14,9 @@ void Ball::draw()
     glPopMatrix();
 }
 
-void Ball::change_grip()
+void Ball::set_grip(bool grip)
 {
-    _grip = !_grip;
+    _grip = grip;
 }
 
 bool Ball::get_grip() const
@@ -29,4 +29,37 @@ void Ball::move(float x, float y, float z)
     _x = x;
     _y = y;
     _z = z;
+}
+
+void Ball::set_speed(float x, float y, float z)
+{
+    _x_speed = x;
+    _y_speed = y;
+    _z_speed = z;
+}
+
+void Ball::get_speed(float &x, float &y, float &z) const
+{
+    x = _x_speed;
+    y = _y_speed;
+    z = _z_speed;
+}
+
+void Ball::update()
+{
+    _x += _x_speed;
+    _y += _y_speed;
+    _z += _z_speed;
+}
+
+void Ball::move_with_delta(float delta)
+{
+    _x += delta;
+}
+
+void Ball::get_position(float &x, float &y, float &z) const
+{
+    x = _x;
+    y = _y;
+    z = _z;
 }
