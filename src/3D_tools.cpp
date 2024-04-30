@@ -202,3 +202,34 @@ void drawEmptySquare()
 	glVertex3f(-0.5, 0.5, 0.0);
 	glEnd();
 }
+
+void drawSphereTex()
+{
+	float angle_theta{0.0};
+	float angle_alpha{0.0};
+	float pas_angle_theta{M_PI / NB_SEG_CIRCLE};
+	float pas_angle_alpha{2 * M_PI / NB_SEG_CIRCLE};
+	for (int band{0}; band < NB_SEG_CIRCLE; band++)
+	{
+		angle_alpha = 0.0;
+		glBegin(GL_TRIANGLE_STRIP);
+		for (int count{0}; count <= NB_SEG_CIRCLE; count++)
+		{
+			glTexCoord3f(cosf(angle_alpha) * sinf(angle_theta),
+						 sinf(angle_alpha) * sinf(angle_theta),
+						 cosf(angle_theta));
+			glVertex3f(cosf(angle_alpha) * sinf(angle_theta),
+					   sinf(angle_alpha) * sinf(angle_theta),
+					   cosf(angle_theta));
+			glTexCoord3f(cosf(angle_alpha) * sinf(angle_theta + pas_angle_theta),
+						 sinf(angle_alpha) * sinf(angle_theta + pas_angle_theta),
+						 cosf(angle_theta + pas_angle_theta));
+			glVertex3f(cosf(angle_alpha) * sinf(angle_theta + pas_angle_theta),
+					   sinf(angle_alpha) * sinf(angle_theta + pas_angle_theta),
+					   cosf(angle_theta + pas_angle_theta));
+			angle_alpha += pas_angle_alpha;
+		}
+		glEnd();
+		angle_theta += pas_angle_theta;
+	}
+}

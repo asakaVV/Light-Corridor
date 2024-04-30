@@ -34,3 +34,5 @@ void drawEmptySquare();
 
 /* Small tools */
 float toRad(float deg);
+
+void drawSphereTex();

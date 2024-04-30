@@ -11,6 +11,8 @@
 #include <iostream>
 #include <cmath>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 #include "3D_tools.hpp"
 #include "menu.hpp"
 #include "ball.hpp"
@@ -213,6 +215,28 @@ int main(int /* argc */, char ** /* argv */)
 		Obstacle(-80.0)};
 	Racket racket = Racket();
 
+	int width, height, nrChannels;
+	auto image = stbi_load("../assets/wave.jpg", &width, &height, &nrChannels, 0);
+
+	if (image == nullptr)
+	{
+		std::cout << "Failed to load texture" << std::endl;
+		return -1;
+	}
+	else
+	{
+		std::cout << "Image loaded with width: " << width << " and height: " << height << std::endl;
+	}
+
+	uint texture;
+	glGenTextures(1, &texture);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -247,7 +271,9 @@ int main(int /* argc */, char ** /* argv */)
 		/* Scene rendering */
 		draw_scene();
 		racket.draw();
+		glEnable(GL_TEXTURE_2D);
 		ball.draw();
+		glDisable(GL_TEXTURE_2D);
 		for (auto wall : walls)
 		{
 			wall.draw();
@@ -304,6 +330,10 @@ int main(int /* argc */, char ** /* argv */)
 			wall.collide(ball);
 		}
 	}
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDeleteTextures(1, &texture);
+	stbi_image_free(image);
 
 	glfwTerminate();
 	return 0;

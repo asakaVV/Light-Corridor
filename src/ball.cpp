@@ -9,8 +9,8 @@ void Ball::draw()
 {
     glPushMatrix();
     glTranslatef(_x - 1., _y, _z);
-    glColor3f(1.0, 0.0, 0.0);
-    drawSphere();
+    glColor3f(1., 1., 1.);
+    drawSphereTex();
     glPopMatrix();
 }
 
