@@ -18,7 +18,7 @@ void draw_scene()
 void draw_button()
 {
     glBegin(GL_POLYGON);
-    glColor3f(0, 0, 0);
+    glColor3f(0.2, 0.2, 0.2);
     glVertex3f(-2., -1., 0);
     glVertex3f(-2., 1., 0);
     glVertex3f(2., 1., 0);

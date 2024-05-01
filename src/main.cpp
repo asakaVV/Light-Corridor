@@ -156,11 +156,11 @@ static void cursor_position_callback(GLFWwindow *window, double xpos, double ypo
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
 
-	double normalized_xpos = 2.0 * xpos / width - 1.0;
-	double normalized_ypos = 1.0 - 2.0 * (ypos - 150) / 650;
+	double normalized_xpos = (2.0 * xpos / width - 1.0) * aspectRatio;
+	double normalized_ypos = 1.0 - 2.0 * ypos / height;
 
-	pos_x = std::max(std::min(10.0 * normalized_xpos, 7.8), -7.8);
-	pos_y = std::max(std::min(-6.0 * normalized_ypos, 4.0), -4.0);
+	pos_x = std::max(std::min(10.0 * normalized_xpos, 8.), -8.0);
+	pos_y = std::max(std::min(-10.0 * normalized_ypos, 4.0), -4.0);
 }
 
 int main(int /* argc */, char ** /* argv */)
@@ -270,17 +270,49 @@ int main(int /* argc */, char ** /* argv */)
 
 		/* Scene rendering */
 		draw_scene();
-		racket.draw();
-		glEnable(GL_TEXTURE_2D);
-		ball.draw();
-		glDisable(GL_TEXTURE_2D);
-		for (auto wall : walls)
+		if (choice == 0)
 		{
-			wall.draw();
+			glPushMatrix();
+			glRotatef(90.0, 1.0, 0.0, 0.0);
+			glRotatef(90.0, 0.0, 1.0, 0.0);
+			glPushMatrix();
+			glTranslatef(-2.5, 0., 0.);
+			if (pos_x > -4.5 && pos_x < -0.5 && pos_y > -1. && pos_y < 1.)
+			{
+				draw_hover_button();
+			}
+			else
+			{
+				draw_button();
+			}
+			glPopMatrix();
+			glPushMatrix();
+			glTranslatef(2.5, 0., 0.);
+			if (pos_x > 0.5 && pos_x < 4.5 && pos_y > -1. && pos_y < 1.)
+			{
+				draw_hover_button();
+			}
+			else
+			{
+				draw_button();
+			}
+			glPopMatrix();
+			glPopMatrix();
 		}
-		for (auto obstacle : obstacles)
+		else
 		{
-			obstacle.draw();
+			racket.draw();
+			glEnable(GL_TEXTURE_2D);
+			ball.draw();
+			glDisable(GL_TEXTURE_2D);
+			for (auto wall : walls)
+			{
+				wall.draw();
+			}
+			for (auto obstacle : obstacles)
+			{
+				obstacle.draw();
+			}
 		}
 
 		/* Swap front and back buffers */
