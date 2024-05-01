@@ -19,6 +19,7 @@
 #include "wall.hpp"
 #include "racket.hpp"
 #include <vector>
+#include <thread>
 #include "obstacle.hpp"
 #include "texture.hpp"
 
@@ -326,6 +327,11 @@ int main(int /* argc */, char ** /* argv */)
 		if (elapsedTime < FRAMERATE_IN_SECONDS)
 		{
 			glfwWaitEventsTimeout(FRAMERATE_IN_SECONDS - elapsedTime);
+			double remainingTime = FRAMERATE_IN_SECONDS - elapsedTime;
+			if (remainingTime > 0)
+			{
+				std::this_thread::sleep_for(std::chrono::duration<double>(remainingTime));
+			}
 		}
 
 		// Move
@@ -338,7 +344,7 @@ int main(int /* argc */, char ** /* argv */)
 			}
 			if (ball.get_grip())
 			{
-				ball.move(0., pos_x, -pos_y);
+				ball.move(1., pos_x, -pos_y);
 			}
 			else
 			{
@@ -358,13 +364,17 @@ int main(int /* argc */, char ** /* argv */)
 			}
 
 			// Collision detection
-			for (auto &wall : walls)
+			if (!ball.get_grip())
 			{
-				wall.collide(ball);
-			}
-			for (auto &obstacle : obstacles)
-			{
-				obstacle.collide(ball);
+				racket.collide(ball);
+				for (auto &wall : walls)
+				{
+					wall.collide(ball);
+				}
+				for (auto &obstacle : obstacles)
+				{
+					obstacle.collide(ball);
+				}
 			}
 		}
 	}
