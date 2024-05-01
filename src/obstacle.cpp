@@ -43,3 +43,29 @@ void Obstacle::collide(Ball &ball)
         part.collide(ball, _depth);
     }
 }
+
+bool Obstacle::do_collide(Racket &racket) const
+{
+    for (const auto &part : _parts)
+    {
+        if (_depth > -0.5 && part.do_collide(racket))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Obstacle::do_any_collide(const std::vector<Obstacle> &obstacles, Racket &racket)
+{
+    for (const auto &obstacle : obstacles)
+    {
+        if (obstacle.do_collide(racket))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}

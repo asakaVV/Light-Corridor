@@ -48,3 +48,16 @@ void Racket::collide(Ball &ball)
         ball.set_speed(-ball_x_speed, collision_distance_y / 10.0, collision_distance_z / 10.0);
     }
 }
+
+void Racket::get_position(float &x, float &y, float &z) const
+{
+    x = _x;
+    y = _y;
+    z = _z;
+}
+
+void Racket::get_scale(float &x, float &y) const
+{
+    x = _scale_x;
+    y = _scale_y;
+}

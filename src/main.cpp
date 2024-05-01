@@ -350,7 +350,7 @@ int main(int /* argc */, char ** /* argv */)
 			{
 				ball.update();
 			}
-			if (!ball.get_grip() && flag_is_moving)
+			if (!ball.get_grip() && flag_is_moving && !Obstacle::do_any_collide(obstacles, racket))
 			{
 				ball.move_with_delta(0.3);
 				for (auto &obstacle : obstacles)

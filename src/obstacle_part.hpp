@@ -2,6 +2,7 @@
 
 #include "drawable.hpp"
 #include "ball.hpp"
+#include "racket.hpp"
 
 class ObstaclePart : public Drawable
 {
@@ -11,6 +12,8 @@ public:
     void draw() const override;
 
     void collide(Ball &ball, float depth);
+
+    bool do_collide(Racket &racket) const;
 
 private:
     float _y = 5.0;

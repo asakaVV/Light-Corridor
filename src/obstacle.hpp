@@ -3,6 +3,7 @@
 #include "drawable.hpp"
 #include "obstacle_part.hpp"
 #include "ball.hpp"
+#include "racket.hpp"
 #include <vector>
 
 class Obstacle : public Drawable
@@ -17,6 +18,10 @@ public:
     bool has_to_despawn() const { return _has_to_despawn; }
 
     void collide(Ball &ball);
+
+    bool do_collide(Racket &racket) const;
+
+    static bool do_any_collide(const std::vector<Obstacle> &obstacles, Racket &racket);
 
 private:
     float _depth = -40.0;

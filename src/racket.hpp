@@ -14,6 +14,10 @@ public:
 
     void collide(Ball &ball);
 
+    void get_position(float &x, float &y, float &z) const;
+
+    void get_scale(float &x, float &y) const;
+
 private:
     float _x;
     float _y;
