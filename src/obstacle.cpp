@@ -2,8 +2,10 @@
 
 Obstacle::Obstacle(float depth) : _depth(depth)
 {
-    ObstaclePart part;
+    ObstaclePart part = ObstaclePart(5.0, 0.0, -0.1, 0.0, 10.0, 12.0, 0.0, -0.1);
     _parts.push_back(part);
+    ObstaclePart part2 = ObstaclePart(0.0, 0.0, 0.0, 0.0, 15.0, 1.0, 0.0, 0.0);
+    _parts.push_back(part2);
 }
 
 void Obstacle::draw() const
@@ -40,7 +42,10 @@ void Obstacle::collide(Ball &ball)
 {
     for (auto &part : _parts)
     {
-        part.collide(ball, _depth);
+        if (part.collide(ball, _depth))
+        {
+            return;
+        }
     }
 }
 
@@ -68,4 +73,20 @@ bool Obstacle::do_any_collide(const std::vector<Obstacle> &obstacles, Racket &ra
     }
 
     return false;
+}
+
+void Obstacle::evolve()
+{
+    for (auto &part : _parts)
+    {
+        part.evolve();
+    }
+}
+
+void Obstacle::collide(Wall &wall)
+{
+    for (auto &part : _parts)
+    {
+        wall.collide(part);
+    }
 }

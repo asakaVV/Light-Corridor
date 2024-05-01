@@ -4,6 +4,7 @@
 #include "obstacle_part.hpp"
 #include "ball.hpp"
 #include "racket.hpp"
+#include "wall.hpp"
 #include <vector>
 
 class Obstacle : public Drawable
@@ -22,6 +23,10 @@ public:
     bool do_collide(Racket &racket) const;
 
     static bool do_any_collide(const std::vector<Obstacle> &obstacles, Racket &racket);
+
+    void evolve();
+
+    void collide(Wall &wall);
 
 private:
     float _depth = -40.0;

@@ -363,6 +363,11 @@ int main(int /* argc */, char ** /* argv */)
 								obstacles.end());
 			}
 
+			for (auto &obstacle : obstacles)
+			{
+				obstacle.evolve();
+			}
+
 			// Collision detection
 			if (!ball.get_grip())
 			{
@@ -374,6 +379,13 @@ int main(int /* argc */, char ** /* argv */)
 				for (auto &obstacle : obstacles)
 				{
 					obstacle.collide(ball);
+				}
+			}
+			for (auto &wall : walls)
+			{
+				for (auto &obstacle : obstacles)
+				{
+					obstacle.collide(wall);
 				}
 			}
 		}

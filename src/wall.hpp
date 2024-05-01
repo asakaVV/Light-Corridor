@@ -3,6 +3,7 @@
 #include "drawable.hpp"
 #include <vector>
 #include "ball.hpp"
+#include "obstacle_part.hpp"
 
 class Wall : public Drawable
 {
@@ -20,6 +21,8 @@ public:
     void draw() const override;
 
     void collide(Ball &ball);
+
+    void collide(ObstaclePart &part);
 
 private:
     float _center[3];

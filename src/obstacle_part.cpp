@@ -4,17 +4,28 @@ ObstaclePart::ObstaclePart()
 {
 }
 
+ObstaclePart::ObstaclePart(float y, float z, float speed_y, float speed_z, float scale_y, float scale_z, float scale_speed_y, float scale_speed_z)
+    : _y(y),
+      _z(z),
+      _speed_y(speed_y),
+      _speed_z(speed_z),
+      _scale_y(scale_y),
+      _scale_z(scale_z),
+      _scale_speed_y(scale_speed_y),
+      _scale_speed_z(scale_speed_z)
+{
+}
+
 void ObstaclePart::draw() const
 {
     glPushMatrix();
     glTranslatef(_z, _y, 0.0);
-    glRotatef(_rotation, 0.0, 0.0, 1.0);
     glScalef(_scale_z, _scale_y, 1.0);
     drawSquare();
     glPopMatrix();
 }
 
-void ObstaclePart::collide(Ball &ball, float depth)
+bool ObstaclePart::collide(Ball &ball, float depth)
 {
     float ball_x, ball_y, ball_z;
     ball.get_position(ball_x, ball_y, ball_z);
@@ -30,7 +41,9 @@ void ObstaclePart::collide(Ball &ball, float depth)
     if (distance < 1.0)
     {
         ball.set_speed(-ball_x_speed, ball_y_speed, ball_z_speed);
+        return true;
     }
+    return false;
 }
 
 bool ObstaclePart::do_collide(Racket &racket) const
@@ -57,4 +70,56 @@ bool ObstaclePart::do_collide(Racket &racket) const
     }
 
     return false;
+}
+
+void ObstaclePart::evolve()
+{
+    _y += _speed_y;
+    _z += _speed_z;
+    _scale_y += _scale_speed_y;
+    _scale_z += _scale_speed_z;
+    if (_scale_y <= 0.1)
+    {
+        _scale_speed_y = -_scale_speed_y;
+    }
+    if (_scale_z <= 0.1)
+    {
+        _scale_speed_z = -_scale_speed_z;
+    }
+}
+
+void ObstaclePart::get_position(float &y, float &z) const
+{
+    y = _y;
+    z = _z;
+}
+
+void ObstaclePart::get_scale(float &y, float &z) const
+{
+    y = _scale_y;
+    z = _scale_z;
+}
+
+void ObstaclePart::get_speed(float &speed_y, float &speed_z) const
+{
+    speed_y = _speed_y;
+    speed_z = _speed_z;
+}
+
+void ObstaclePart::set_speed(float speed_y, float speed_z)
+{
+    _speed_y = speed_y;
+    _speed_z = speed_z;
+}
+
+void ObstaclePart::get_scale_speed(float &speed_y, float &speed_z) const
+{
+    speed_y = _scale_speed_y;
+    speed_z = _scale_speed_z;
+}
+
+void ObstaclePart::set_scale_speed(float speed_y, float speed_z)
+{
+    _scale_speed_y = speed_y;
+    _scale_speed_z = speed_z;
 }

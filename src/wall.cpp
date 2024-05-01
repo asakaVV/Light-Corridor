@@ -61,3 +61,52 @@ void Wall::collide(Ball &ball)
         break;
     }
 }
+
+void Wall::collide(ObstaclePart &part)
+{
+    float part_y, part_z;
+    part.get_position(part_y, part_z);
+    float part_scale_y, part_scale_z;
+    part.get_scale(part_scale_y, part_scale_z);
+    float part_speed_y, part_speed_z;
+    part.get_speed(part_speed_y, part_speed_z);
+    float part_scale_speed_y, part_scale_speed_z;
+    part.get_scale_speed(part_scale_speed_y, part_scale_speed_z);
+
+    float part_left = part_z - part_scale_z / 2.0f;
+    float part_right = part_z + part_scale_z / 2.0f;
+    float part_top = part_y + part_scale_y / 2.0f;
+    float part_bottom = part_y - part_scale_y / 2.0f;
+
+    switch (_type)
+    {
+    case WallType::TOP:
+        if ((part_speed_z > 0 || part_scale_speed_z > 0) && part_top >= _center[1] - _size[1] / 2.0f && part_bottom <= _center[1] + _size[1] / 2.0f && part_right >= _center[2] - _size[2] / 2.0f && part_left <= _center[2] + _size[2] / 2.0f)
+        {
+            part.set_speed(part_speed_y, -part_speed_z);
+            part.set_scale_speed(part_scale_speed_y, -part_scale_speed_z);
+        }
+        break;
+    case WallType::LEFT:
+        if ((part_speed_y < 0 || part_scale_speed_y > 0) && part_right >= _center[2] - _size[2] / 2.0f && part_left <= _center[2] + _size[2] / 2.0f && part_top >= _center[1] - _size[1] / 2.0f && part_bottom <= _center[1] + _size[1] / 2.0f)
+        {
+            part.set_speed(-part_speed_y, part_speed_z);
+            part.set_scale_speed(-part_scale_speed_y, part_scale_speed_z);
+        }
+        break;
+    case WallType::RIGHT:
+        if ((part_speed_y > 0 || part_scale_speed_y > 0) && part_right >= _center[2] - _size[2] / 2.0f && part_left <= _center[2] + _size[2] / 2.0f && part_top >= _center[1] - _size[1] / 2.0f && part_bottom <= _center[1] + _size[1] / 2.0f)
+        {
+            part.set_speed(-part_speed_y, part_speed_z);
+            part.set_scale_speed(-part_scale_speed_y, part_scale_speed_z);
+        }
+        break;
+    case WallType::BOTTOM:
+        if ((part_speed_z < 0 || part_scale_speed_z > 0) && part_top >= _center[1] - _size[1] / 2.0f && part_bottom <= _center[1] + _size[1] / 2.0f && part_right >= _center[2] - _size[2] / 2.0f && part_left <= _center[2] + _size[2] / 2.0f)
+        {
+            part.set_speed(part_speed_y, -part_speed_z);
+            part.set_scale_speed(part_scale_speed_y, -part_scale_speed_z);
+        }
+        break;
+    }
+}
