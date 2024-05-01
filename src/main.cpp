@@ -20,6 +20,7 @@
 #include "racket.hpp"
 #include <vector>
 #include "obstacle.hpp"
+#include "texture.hpp"
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1000;
@@ -39,7 +40,7 @@ static int flag_animate_rot_arm = 0;
 static int flag_is_moving = 0;
 static bool flag_is_grip = true;
 
-static int choice = 1;
+static int choice = 0;
 
 static float pos_x = 0.0;
 static float pos_y = 0.0;
@@ -145,7 +146,7 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 		std::cout << "STOP" << std::endl;
 		flag_is_moving = 0;
 	}
-	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS && choice == 1)
 	{
 		flag_is_grip = false;
 	}
@@ -217,9 +218,15 @@ int main(int /* argc */, char ** /* argv */)
 	Racket racket = Racket();
 
 	int width, height, nrChannels;
-	auto image = stbi_load("../assets/wave.jpg", &width, &height, &nrChannels, 0);
+	int width2, height2, nrChannels2;
+	int width3, height3, nrChannels3;
+	int width4, height4, nrChannels4;
+	auto ball_tex = stbi_load("../assets/wave.jpg", &width, &height, &nrChannels, 0);
+	auto play_button = stbi_load("../assets/Play.jpg", &width2, &height2, &nrChannels2, 0);
+	auto quit_button = stbi_load("../assets/Quit.jpg", &width3, &height3, &nrChannels3, 0);
+	auto menu_tex = stbi_load("../assets/menu.jpg", &width4, &height4, &nrChannels4, 0);
 
-	if (image == nullptr)
+	if (ball_tex == nullptr || play_button == nullptr || quit_button == nullptr || menu_tex == nullptr)
 	{
 		std::cout << "Failed to load texture" << std::endl;
 		return -1;
@@ -236,7 +243,12 @@ int main(int /* argc */, char ** /* argv */)
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	TextureObject texture_ball = TextureObject(ball_tex, width, height);
+	TextureObject texture_play = TextureObject(play_button, width2, height2);
+	TextureObject texture_quit = TextureObject(quit_button, width3, height3);
+	TextureObject texture_menu = TextureObject(menu_tex, width4, height4);
+
+	// glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -271,41 +283,27 @@ int main(int /* argc */, char ** /* argv */)
 
 		/* Scene rendering */
 		draw_scene();
+
 		if (choice == 0)
 		{
-			glPushMatrix();
-			glRotatef(90.0, 1.0, 0.0, 0.0);
-			glRotatef(90.0, 0.0, 1.0, 0.0);
-			glPushMatrix();
-			glTranslatef(-2.5, 0., 0.);
-			if (pos_x > -4.5 && pos_x < -0.5 && pos_y > -1. && pos_y < 1.)
-			{
-				draw_hover_button();
-			}
-			else
-			{
-				draw_button();
-			}
-			glPopMatrix();
-			glPushMatrix();
-			glTranslatef(2.5, 0., 0.);
-			if (pos_x > 0.5 && pos_x < 4.5 && pos_y > -1. && pos_y < 1.)
-			{
-				draw_hover_button();
-			}
-			else
-			{
-				draw_button();
-			}
-			glPopMatrix();
-			glPopMatrix();
+			choice = draw_menu(texture_menu, texture_play, texture_quit, pos_x, pos_y, flag_is_moving);
 		}
-		else
+		else if (choice == 2)
+		{
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glDeleteTextures(1, &texture);
+			stbi_image_free(ball_tex);
+			stbi_image_free(play_button);
+			stbi_image_free(quit_button);
+			stbi_image_free(menu_tex);
+
+			glfwTerminate();
+			return 0;
+		}
+		else if (choice == 1)
 		{
 			racket.draw();
-			glEnable(GL_TEXTURE_2D);
-			ball.draw();
-			glDisable(GL_TEXTURE_2D);
+			ball.drawTex(texture_ball);
 			for (auto wall : walls)
 			{
 				wall.draw();
@@ -331,46 +329,52 @@ int main(int /* argc */, char ** /* argv */)
 		}
 
 		// Move
-		racket.move(pos_y, pos_x, 0.);
-		if (ball.get_grip() && !flag_is_grip)
+		if (choice == 1)
 		{
-			ball.set_grip(false);
-		}
-		if (ball.get_grip())
-		{
-			ball.move(0., pos_x, -pos_y);
-		}
-		else
-		{
-			ball.update();
-		}
-		if (!ball.get_grip() && flag_is_moving)
-		{
-			ball.move_with_delta(0.3);
-			for (auto &obstacle : obstacles)
+			racket.move(pos_y, pos_x, 0.);
+			if (ball.get_grip() && !flag_is_grip)
 			{
-				obstacle.move(0.3);
+				ball.set_grip(false);
+			}
+			if (ball.get_grip())
+			{
+				ball.move(0., pos_x, -pos_y);
+			}
+			else
+			{
+				ball.update();
+			}
+			if (!ball.get_grip() && flag_is_moving)
+			{
+				ball.move_with_delta(0.3);
+				for (auto &obstacle : obstacles)
+				{
+					obstacle.move(0.3);
+				}
+
+				obstacles.erase(std::remove_if(obstacles.begin(), obstacles.end(), [](const Obstacle &obstacle)
+											   { return obstacle.has_to_despawn(); }),
+								obstacles.end());
 			}
 
-			obstacles.erase(std::remove_if(obstacles.begin(), obstacles.end(), [](const Obstacle &obstacle)
-										   { return obstacle.has_to_despawn(); }),
-							obstacles.end());
-		}
-
-		// Collision detection
-		for (auto &wall : walls)
-		{
-			wall.collide(ball);
-		}
-		for (auto &obstacle : obstacles)
-		{
-			obstacle.collide(ball);
+			// Collision detection
+			for (auto &wall : walls)
+			{
+				wall.collide(ball);
+			}
+			for (auto &obstacle : obstacles)
+			{
+				obstacle.collide(ball);
+			}
 		}
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDeleteTextures(1, &texture);
-	stbi_image_free(image);
+	stbi_image_free(ball_tex);
+	stbi_image_free(play_button);
+	stbi_image_free(quit_button);
+	stbi_image_free(menu_tex);
 
 	glfwTerminate();
 	return 0;

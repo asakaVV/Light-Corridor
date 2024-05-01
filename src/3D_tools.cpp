@@ -233,3 +233,17 @@ void drawSphereTex()
 		angle_theta += pas_angle_theta;
 	}
 }
+
+void drawSquareTex()
+{
+	glBegin(GL_POLYGON);
+	glTexCoord3f(0., 0., 0.0);
+	glVertex3f(0., 0., 0.0);
+	glTexCoord3f(1., 0., 0.0);
+	glVertex3f(1., 0., 0.0);
+	glTexCoord3f(1., 1., 0.0);
+	glVertex3f(1., 1., 0.0);
+	glTexCoord3f(0., 1., 0.0);
+	glVertex3f(0., 1., 0.0);
+	glEnd();
+}

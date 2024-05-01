@@ -9,9 +9,12 @@
 #include <GL/gl.h>
 #endif
 #include "3D_tools.hpp"
+#include "texture.hpp"
 
 void draw_scene();
 
-void draw_button();
+void draw_button(const TextureObject &texture);
 
-void draw_hover_button();
+void draw_hover_button(const TextureObject &texture);
+
+int draw_menu(const TextureObject &menu, const TextureObject &play, const TextureObject &quit, int pos_x, int pos_y, bool flag_is_moving);

@@ -36,3 +36,5 @@ void drawEmptySquare();
 float toRad(float deg);
 
 void drawSphereTex();
+
+void drawSquareTex();

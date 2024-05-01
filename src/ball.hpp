@@ -1,6 +1,7 @@
 #pragma once
 
 #include "drawable.hpp"
+#include "texture.hpp"
 
 class Ball : public Drawable
 {
@@ -8,6 +9,8 @@ public:
     Ball();
 
     void draw() const override;
+
+    void drawTex(const TextureObject &texture);
 
     void set_grip(bool grip);
 

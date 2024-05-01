@@ -14,6 +14,18 @@ void Ball::draw() const
     glPopMatrix();
 }
 
+void Ball::drawTex(const TextureObject &texture)
+{
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.get_width(), texture.get_height(), 0, GL_RGB, GL_UNSIGNED_BYTE, texture.get_image());
+    glPushMatrix();
+    glTranslatef(_x - 1., _y, _z);
+    glColor3f(1., 1., 1.);
+    glEnable(GL_TEXTURE_2D);
+    drawSphereTex();
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
+}
+
 void Ball::set_grip(bool grip)
 {
     _grip = grip;
