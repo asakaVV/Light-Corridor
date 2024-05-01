@@ -17,7 +17,7 @@ public:
 
     Wall(std::vector<float> center, std::vector<float> size, float rotation, std::vector<float> color, WallType type);
 
-    void draw() override;
+    void draw() const override;
 
     void collide(Ball &ball);
 

@@ -5,7 +5,7 @@ Racket::Racket()
 {
 }
 
-void Racket::draw()
+void Racket::draw() const
 {
     glPushMatrix();
     glRotatef(90, 0.0, 1.0, 0.0);

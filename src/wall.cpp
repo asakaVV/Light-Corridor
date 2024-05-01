@@ -15,7 +15,7 @@ Wall::Wall(std::vector<float> center, std::vector<float> size, float rotation, s
     _type = type;
 }
 
-void Wall::draw()
+void Wall::draw() const
 {
     glPushMatrix();
     glTranslatef(_center[0], _center[1], _center[2]);

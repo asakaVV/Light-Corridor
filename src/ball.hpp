@@ -7,7 +7,7 @@ class Ball : public Drawable
 public:
     Ball();
 
-    void draw() override;
+    void draw() const override;
 
     void set_grip(bool grip);
 

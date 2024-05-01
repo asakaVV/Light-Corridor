@@ -5,7 +5,7 @@ Ball::Ball()
 {
 }
 
-void Ball::draw()
+void Ball::draw() const
 {
     glPushMatrix();
     glTranslatef(_x - 1., _y, _z);

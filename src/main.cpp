@@ -39,7 +39,7 @@ static int flag_animate_rot_arm = 0;
 static int flag_is_moving = 0;
 static bool flag_is_grip = true;
 
-static int choice = 0;
+static int choice = 1;
 
 static float pos_x = 0.0;
 static float pos_y = 0.0;
@@ -208,11 +208,12 @@ int main(int /* argc */, char ** /* argv */)
 		Wall({-500.0, 0.0, 6.0}, {1000.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}, Wall::WallType::TOP),
 		Wall({-500.0, 0.0, -6.0}, {1000.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}, Wall::WallType::BOTTOM)};
 	std::vector<Obstacle> obstacles = {
-		Obstacle(-0.0),
 		Obstacle(-20.0),
 		Obstacle(-40.0),
 		Obstacle(-60.0),
-		Obstacle(-80.0)};
+		Obstacle(-80.0),
+		Obstacle(-100.0),
+	};
 	Racket racket = Racket();
 
 	int width, height, nrChannels;
@@ -343,7 +344,7 @@ int main(int /* argc */, char ** /* argv */)
 		{
 			ball.update();
 		}
-		if (flag_is_moving)
+		if (!ball.get_grip() && flag_is_moving)
 		{
 			ball.move_with_delta(0.3);
 			for (auto &obstacle : obstacles)
@@ -360,6 +361,10 @@ int main(int /* argc */, char ** /* argv */)
 		for (auto &wall : walls)
 		{
 			wall.collide(ball);
+		}
+		for (auto &obstacle : obstacles)
+		{
+			obstacle.collide(ball);
 		}
 	}
 

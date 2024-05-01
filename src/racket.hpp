@@ -9,7 +9,7 @@ public:
 
     void move(float x, float y, float z);
 
-    void draw() override;
+    void draw() const override;
 
 private:
     float _x;
