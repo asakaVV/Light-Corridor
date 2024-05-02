@@ -14,18 +14,26 @@ void Obstacle::draw() const
     glTranslatef(_depth, 0.0, 0.0);
     glScalef(10.0, 19.9, 11.9);
     glRotatef(90.0, 0.0, 1.0, 0.0);
-    glColor3f(0.0, 1.0, 0.0);
+    glColor3f(1.0, 1.0, 1.0);
     drawEmptySquare();
     glPopMatrix();
 
+    GLfloat light_spec[] = {1.0, 1.0, 1.0};
+    GLfloat amb[] = {0., 0., 0.};
+    GLfloat color[] = {0.0, 1.0, 0.0};
     glPushMatrix();
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, amb);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, light_spec);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 20.);
     glTranslatef(_depth, 0.0, 0.0);
     glRotatef(90.0, 0.0, 1.0, 0.0);
-    glColor3f(0.0, 1.0, 0.0);
+    // glColor3f(0.0, 1.0, 0.0);
     for (const auto &part : _parts)
     {
         part.draw();
     }
+    glColor3f(1., 1., 1.);
     glPopMatrix();
 }
 

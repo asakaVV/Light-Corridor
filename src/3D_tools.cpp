@@ -126,9 +126,13 @@ float toRad(float deg)
 void drawSquare()
 {
 	glBegin(GL_TRIANGLE_FAN);
+	glNormal3f(0.0, 0.0, 1.0);
 	glVertex3f(-0.5, -0.5, 0.0);
+	glNormal3f(0.0, 0.0, 1.0);
 	glVertex3f(0.5, -0.5, 0.0);
+	glNormal3f(0.0, 0.0, 1.0);
 	glVertex3f(0.5, 0.5, 0.0);
+	glNormal3f(0.0, 0.0, 1.0);
 	glVertex3f(-0.5, 0.5, 0.0);
 	glEnd();
 }
@@ -180,9 +184,15 @@ void drawSphere()
 		glBegin(GL_TRIANGLE_STRIP);
 		for (int count{0}; count <= NB_SEG_CIRCLE; count++)
 		{
+			glNormal3f(cosf(angle_alpha) * sinf(angle_theta),
+					   sinf(angle_alpha) * sinf(angle_theta),
+					   cosf(angle_theta));
 			glVertex3f(cosf(angle_alpha) * sinf(angle_theta),
 					   sinf(angle_alpha) * sinf(angle_theta),
 					   cosf(angle_theta));
+			glNormal3f(cosf(angle_alpha) * sinf(angle_theta + pas_angle_theta),
+					   sinf(angle_alpha) * sinf(angle_theta + pas_angle_theta),
+					   cosf(angle_theta + pas_angle_theta));
 			glVertex3f(cosf(angle_alpha) * sinf(angle_theta + pas_angle_theta),
 					   sinf(angle_alpha) * sinf(angle_theta + pas_angle_theta),
 					   cosf(angle_theta + pas_angle_theta));
@@ -215,12 +225,18 @@ void drawSphereTex()
 		glBegin(GL_TRIANGLE_STRIP);
 		for (int count{0}; count <= NB_SEG_CIRCLE; count++)
 		{
+			glNormal3f(cosf(angle_alpha) * sinf(angle_theta),
+					   sinf(angle_alpha) * sinf(angle_theta),
+					   cosf(angle_theta));
 			glTexCoord3f(cosf(angle_alpha) * sinf(angle_theta),
 						 sinf(angle_alpha) * sinf(angle_theta),
 						 cosf(angle_theta));
 			glVertex3f(cosf(angle_alpha) * sinf(angle_theta),
 					   sinf(angle_alpha) * sinf(angle_theta),
 					   cosf(angle_theta));
+			glNormal3f(cosf(angle_alpha) * sinf(angle_theta + pas_angle_theta),
+					   sinf(angle_alpha) * sinf(angle_theta + pas_angle_theta),
+					   cosf(angle_theta + pas_angle_theta));
 			glTexCoord3f(cosf(angle_alpha) * sinf(angle_theta + pas_angle_theta),
 						 sinf(angle_alpha) * sinf(angle_theta + pas_angle_theta),
 						 cosf(angle_theta + pas_angle_theta));
@@ -246,4 +262,23 @@ void drawSquareTex()
 	glTexCoord3f(0., 1., 0.0);
 	glVertex3f(0., 1., 0.0);
 	glEnd();
+}
+
+void drawMultiSquare(int nbSquareWidth, int nbSquareHeight)
+
+{
+	float step_x = 1.0 / nbSquareWidth;
+	float step_y = 1.0 / nbSquareHeight;
+
+	for (int i = -nbSquareWidth / 2; i < nbSquareWidth / 2; i++)
+	{
+		for (int j = -nbSquareHeight / 2; j < nbSquareHeight / 2; j++)
+		{
+			glPushMatrix();
+			glTranslatef((i + 0.5) * step_x, (j + 0.5) * step_y, 0.0);
+			glScalef(step_x, step_y, 1.0);
+			drawSquare();
+			glPopMatrix();
+		}
+	}
 }

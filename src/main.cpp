@@ -22,6 +22,7 @@
 #include <thread>
 #include "obstacle.hpp"
 #include "texture.hpp"
+#include "player.hpp"
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1000;
@@ -201,7 +202,10 @@ int main(int /* argc */, char ** /* argv */)
 	glPointSize(5.0);
 	glEnable(GL_DEPTH_TEST);
 
+	Player player = Player();
+
 	Ball ball = Ball();
+	Ball life_ball = Ball();
 	std::vector<Wall> walls = {
 		Wall({-500.0, 10.0, 0.0}, {1000.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}, Wall::WallType::RIGHT),
 		Wall({-500.0, -10.0, 0.0}, {1000.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}, Wall::WallType::LEFT),
@@ -241,6 +245,26 @@ int main(int /* argc */, char ** /* argv */)
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	// Light
+	GLfloat light_position[] = {5., 0., 0., 1.};
+	GLfloat amb[] = {0.5, 0.5, 0.5, 0.5};
+	GLfloat diff[] = {75 / 255., 75 / 255., 75 / 255.};
+	GLfloat spec[] = {75 / 255., 0., 0.};
+
+	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
+	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.);
+	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.);
+	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.);
+
+	glLightfv(GL_LIGHT1, GL_AMBIENT, amb);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, diff);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, spec);
+	glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.);
+	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.);
+	glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.);
 
 	TextureObject texture_ball = TextureObject(ball_tex, width, height);
 	TextureObject texture_play = TextureObject(play_button, width2, height2);
@@ -301,8 +325,21 @@ int main(int /* argc */, char ** /* argv */)
 		}
 		else if (choice == 1)
 		{
-			racket.draw();
+			glPushMatrix();
+			glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+			glColor3f(1., 1., 1.);
+			glTranslatef(20., 0., 0.);
+			glScalef(0.1, 0.1, 0.1);
+			glRotatef(90, 0, 1, 0);
+			drawSphere();
+			glPopMatrix();
 			ball.drawTex(texture_ball);
+
+			glEnable(GL_LIGHTING);
+			glEnable(GL_LIGHT0);
+			glEnable(GL_LIGHT1);
+			glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+
 			for (auto wall : walls)
 			{
 				wall.draw();
@@ -310,6 +347,18 @@ int main(int /* argc */, char ** /* argv */)
 			for (auto obstacle : obstacles)
 			{
 				obstacle.draw();
+			}
+
+			glDisable(GL_LIGHTING);
+			racket.draw();
+			for (int i = 0; i < player.get_life(); i++)
+			{
+				glPushMatrix();
+				glTranslatef(0., -8.0 + 1.2 * i, -8.0);
+				glScalef(0.5, 0.5, 0.5);
+				glColor3f(1.0, 0.0, 0.0);
+				life_ball.drawTex(texture_ball);
+				glPopMatrix();
 			}
 		}
 
@@ -342,7 +391,7 @@ int main(int /* argc */, char ** /* argv */)
 			}
 			if (ball.get_grip())
 			{
-				ball.move(1., pos_x, -pos_y);
+				ball.move(-1., pos_x, -pos_y);
 			}
 			else
 			{
@@ -385,6 +434,21 @@ int main(int /* argc */, char ** /* argv */)
 				{
 					obstacle.collide(wall);
 				}
+			}
+
+			float ball_x, ball_y, ball_z;
+			ball.get_position(ball_x, ball_y, ball_z);
+
+			if (ball_x > 0.)
+			{
+				player.set_life(player.get_life() - 1);
+				ball.set_grip(true);
+				flag_is_grip = true;
+				ball.move(-1., pos_x, -pos_y);
+			}
+			if (player.get_life() < 0)
+			{
+				break;
 			}
 		}
 	}

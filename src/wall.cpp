@@ -17,12 +17,36 @@ Wall::Wall(std::vector<float> center, std::vector<float> size, float rotation, s
 
 void Wall::draw() const
 {
+    GLfloat light_spec[] = {1.0, 1.0, 1.0};
+    GLfloat amb[] = {0., 0., 0.};
     glPushMatrix();
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, amb);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, _color);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, light_spec);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.);
     glTranslatef(_center[0], _center[1], _center[2]);
     glScalef(_size[0], _size[1], _size[2]);
-    glRotatef(_rotation, 1.0, 0.0, 0.0);
-    glColor3f(_color[0], _color[1], _color[2]);
-    drawSquare();
+    // glColor3f(_color[0], _color[1], _color[2]);
+    switch (_type)
+    {
+    case WallType::TOP:
+        glRotatef(180, 1.0, 0.0, 0.0);
+        drawMultiSquare(_size[0], _size[1]);
+        break;
+    case WallType::BOTTOM:
+        glRotatef(0, 1.0, 0.0, 0.0);
+        drawMultiSquare(_size[0], _size[1]);
+        break;
+    case WallType::LEFT:
+        glRotatef(270, 1.0, 0.0, 0.0);
+        drawMultiSquare(_size[0], _size[2]);
+        break;
+    case WallType::RIGHT:
+        glRotatef(90, 1.0, 0.0, 0.0);
+        drawMultiSquare(_size[0], _size[2]);
+        break;
+    }
+    glColor3f(1., 1., 1.);
     glPopMatrix();
 }
 

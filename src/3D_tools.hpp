@@ -38,3 +38,5 @@ float toRad(float deg);
 void drawSphereTex();
 
 void drawSquareTex();
+
+void drawMultiSquare(int nbSquareWidth, int nbSquareHeight);

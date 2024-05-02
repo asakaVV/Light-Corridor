@@ -21,7 +21,7 @@ void ObstaclePart::draw() const
     glPushMatrix();
     glTranslatef(_z, _y, 0.0);
     glScalef(_scale_z, _scale_y, 1.0);
-    drawSquare();
+    drawMultiSquare(10, 10);
     glPopMatrix();
 }
 
