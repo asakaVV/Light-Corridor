@@ -1,6 +1,6 @@
 #include "obstacle.hpp"
 
-Obstacle::Obstacle(float depth) : _depth(depth)
+Obstacle::Obstacle(float depth, float obstacle_depth) : _depth(depth)
 {
     ObstaclePart part = ObstaclePart(5.0, 0.0, -0.1, 0.0, 10.0, 12.0, 0.0, -0.1);
     _parts.push_back(part);
@@ -37,13 +37,15 @@ void Obstacle::draw() const
     glPopMatrix();
 }
 
-void Obstacle::move(float delta)
+bool Obstacle::move(float delta)
 {
     _depth += delta;
-    if (_depth > 0.0)
+    if (_depth > -0.0)
     {
         _has_to_despawn = true;
+        return true;
     }
+    return false;
 }
 
 void Obstacle::collide(Ball &ball)
@@ -61,7 +63,7 @@ bool Obstacle::do_collide(Racket &racket) const
 {
     for (const auto &part : _parts)
     {
-        if (_depth > -0.5 && part.do_collide(racket))
+        if (_depth > -1 && part.do_collide(racket))
         {
             return true;
         }

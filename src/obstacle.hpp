@@ -10,11 +10,11 @@
 class Obstacle : public Drawable
 {
 public:
-    Obstacle(float depth);
+    Obstacle(float depth, float obstacle_depth);
 
     void draw() const override;
 
-    void move(float delta);
+    bool move(float delta);
 
     bool has_to_despawn() const { return _has_to_despawn; }
 
@@ -27,6 +27,8 @@ public:
     void evolve();
 
     void collide(Wall &wall);
+
+    float get_depth() const { return _depth; }
 
 private:
     float _depth = -40.0;

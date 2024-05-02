@@ -202,8 +202,6 @@ int main(int /* argc */, char ** /* argv */)
 	glPointSize(5.0);
 	glEnable(GL_DEPTH_TEST);
 
-	Player player = Player();
-
 	Ball ball = Ball();
 	Ball life_ball = Ball();
 	std::vector<Wall> walls = {
@@ -212,13 +210,16 @@ int main(int /* argc */, char ** /* argv */)
 		Wall({-500.0, 0.0, 6.0}, {1000.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}, Wall::WallType::TOP),
 		Wall({-500.0, 0.0, -6.0}, {1000.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}, Wall::WallType::BOTTOM)};
 	std::vector<Obstacle> obstacles = {
-		Obstacle(-20.0),
-		Obstacle(-40.0),
-		Obstacle(-60.0),
-		Obstacle(-80.0),
-		Obstacle(-100.0),
+		Obstacle(-20.0, -20.0),
+		Obstacle(-40.0, -40.0),
+		Obstacle(-60.0, -60.0),
+		Obstacle(-80.0, -80.0),
+		Obstacle(-100.0, -100.0),
 	};
+	long obstacle_depth = -100;
+	bool has_to_create = false;
 	Racket racket = Racket();
+	Player player = Player();
 
 	int width, height, nrChannels;
 	int width2, height2, nrChannels2;
@@ -360,6 +361,8 @@ int main(int /* argc */, char ** /* argv */)
 				life_ball.drawTex(texture_ball);
 				glPopMatrix();
 			}
+			// TODO : change the way to display the score
+			std::cout << "Score : " << player.get_score() << std::endl;
 		}
 
 		/* Swap front and back buffers */
@@ -402,12 +405,23 @@ int main(int /* argc */, char ** /* argv */)
 				ball.move_with_delta(0.5);
 				for (auto &obstacle : obstacles)
 				{
-					obstacle.move(0.5);
+					if (obstacle.move(0.5))
+					{
+						player.add_score(1);
+						has_to_create = true;
+					}
 				}
 
 				obstacles.erase(std::remove_if(obstacles.begin(), obstacles.end(), [](const Obstacle &obstacle)
 											   { return obstacle.has_to_despawn(); }),
 								obstacles.end());
+			}
+
+			if (has_to_create)
+			{
+				obstacle_depth -= 20;
+				obstacles.push_back(Obstacle(obstacles.back().get_depth() - 20.0, obstacle_depth));
+				has_to_create = false;
 			}
 
 			for (auto &obstacle : obstacles)
@@ -439,7 +453,7 @@ int main(int /* argc */, char ** /* argv */)
 			float ball_x, ball_y, ball_z;
 			ball.get_position(ball_x, ball_y, ball_z);
 
-			if (ball_x > 0.)
+			if (ball_x > 5.)
 			{
 				player.set_life(player.get_life() - 1);
 				ball.set_grip(true);
