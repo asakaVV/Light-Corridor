@@ -288,9 +288,9 @@ int main(int /* argc */, char ** /* argv */)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	// Light
-	GLfloat light_position[] = {5., 0., 0., 1.};
+	GLfloat light_position[] = {20., 0., 0., 1.};
 	GLfloat amb[] = {0.5, 0.5, 0.5, 0.5};
-	GLfloat diff[] = {75 / 255., 75 / 255., 75 / 255.};
+	GLfloat diff[] = {200 / 255., 200 / 255., 200 / 255.};
 	GLfloat spec[] = {75 / 255., 75 / 255, 75 / 255};
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);

@@ -15,7 +15,7 @@ Obstacle::Obstacle(float depth, long level) : _depth(depth)
 
     std::cout << level << " : " << obstacle_type << "   (" << floor << ")" << std::endl;
 
-    obstacle_type = 3;
+    // obstacle_type = 8;
     int type;
 
     switch (obstacle_type)
@@ -71,6 +71,62 @@ Obstacle::Obstacle(float depth, long level) : _depth(depth)
         case 2: // 2
             _parts.push_back(ObstaclePart(5.0, -3.0, 0.0, 0.0, 10.0, 6.0, 0.0, 0.0));
             _parts.push_back(ObstaclePart(-5.0, 3.0, 0.0, 0.0, 10.0, 6.0, 0.0, 0.0));
+            break;
+        }
+        break;
+    case 4: // Small
+        _parts.push_back(ObstaclePart(-7.5, 0.0, 0.0, 0.0, 5.0, 12.0, 0.0, 0.0));
+        _parts.push_back(ObstaclePart(0.0, -4.5, 0.0, 0.0, 20.0, 3.0, 0.0, 0.0));
+        _parts.push_back(ObstaclePart(7.5, 0.0, 0.0, 0.0, 5.0, 12.0, 0.0, 0.0));
+        _parts.push_back(ObstaclePart(0.0, 4.5, 0.0, 0.0, 20.0, 3.0, 0.0, 0.0));
+        break;
+    case 5: // Anti Corner
+        type = Random::get_int(1, 4);
+        switch (type)
+        {
+        case 1: // Bottom Right
+            _parts.push_back(ObstaclePart(2.25, 2.25, 0.0, 0.0, 15.5, 7.5, 0.0, 0.0));
+            break;
+        case 2: // Bottom Left
+            _parts.push_back(ObstaclePart(-2.25, 2.25, 0.0, 0.0, 15.5, 7.5, 0.0, 0.0));
+            break;
+        case 3: // Top Left
+            _parts.push_back(ObstaclePart(-2.25, -2.25, 0.0, 0.0, 15.5, 7.5, 0.0, 0.0));
+            break;
+        case 4: // Top Right
+            _parts.push_back(ObstaclePart(2.25, -2.25, 0.0, 0.0, 15.5, 7.5, 0.0, 0.0));
+            break;
+        }
+        break;
+    case 6: // Cross
+        _parts.push_back(ObstaclePart(0.0, 0.0, 0.0, 0.0, 20.0, 3.0, 0.0, 0.0));
+        _parts.push_back(ObstaclePart(0.0, 0.0, 0.0, 0.0, 7.0, 12.0, 0.0, 0.0));
+        break;
+    case 7: // Moving Half
+        type = Random::get_int(1, 4);
+        switch (type)
+        {
+        case 1: // Right
+            _parts.push_back(ObstaclePart(5.0, 0.0, 0.2, 0.0, 10.0, 12.0, 0.0, 0.0));
+            break;
+        case 2: // Left
+            _parts.push_back(ObstaclePart(-5.0, 0.0, 0.2, 0.0, 10.0, 12.0, 0.0, 0.0));
+            break;
+        case 3: // Top
+            _parts.push_back(ObstaclePart(0.0, 3.0, 0.0, 0.1, 20.0, 6.0, 0.0, 0.0));
+            break;
+        case 4: // Bottom
+            _parts.push_back(ObstaclePart(0.0, -3.0, 0.0, 0.1, 20.0, 6.0, 0.0, 0.0));
+            break;
+        }
+        break;
+    case 8: // Stairs
+        type = Random::get_int(1, 4);
+        type = 1;
+        switch (type)
+        {
+        case 1: // From Left
+            _parts.push_back(ObstaclePart(-9.0, -5.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0));
             break;
         }
     }
