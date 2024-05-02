@@ -225,7 +225,7 @@ int main(int /* argc */, char ** /* argv */)
 	int width2, height2, nrChannels2;
 	int width3, height3, nrChannels3;
 	int width4, height4, nrChannels4;
-	auto ball_tex = stbi_load("../assets/wave.jpg", &width, &height, &nrChannels, 0);
+	auto ball_tex = stbi_load("../assets/steel.jpg", &width, &height, &nrChannels, 0);
 	auto play_button = stbi_load("../assets/Play.jpg", &width2, &height2, &nrChannels2, 0);
 	auto quit_button = stbi_load("../assets/Quit.jpg", &width3, &height3, &nrChannels3, 0);
 	auto menu_tex = stbi_load("../assets/menu.jpg", &width4, &height4, &nrChannels4, 0);
@@ -239,6 +239,45 @@ int main(int /* argc */, char ** /* argv */)
 	{
 		std::cout << "Image loaded with width: " << width << " and height: " << height << std::endl;
 	}
+
+	// digits loading
+	int width5, height5, nrChannels5;
+	int width6, height6, nrChannels6;
+	int width7, height7, nrChannels7;
+	int width8, height8, nrChannels8;
+	int width9, height9, nrChannels9;
+	int width10, height10, nrChannels10;
+	int width11, height11, nrChannels11;
+	int width12, height12, nrChannels12;
+	int width13, height13, nrChannels13;
+	int width14, height14, nrChannels14;
+	auto tex_0 = stbi_load("../assets/digits/0.jpg", &width5, &height5, &nrChannels5, 0);
+	auto tex_1 = stbi_load("../assets/digits/1.jpg", &width6, &height6, &nrChannels6, 0);
+	auto tex_2 = stbi_load("../assets/digits/2.jpg", &width7, &height7, &nrChannels7, 0);
+	auto tex_3 = stbi_load("../assets/digits/3.jpg", &width8, &height8, &nrChannels8, 0);
+	auto tex_4 = stbi_load("../assets/digits/4.jpg", &width9, &height9, &nrChannels9, 0);
+	auto tex_5 = stbi_load("../assets/digits/5.jpg", &width10, &height10, &nrChannels10, 0);
+	auto tex_6 = stbi_load("../assets/digits/6.jpg", &width11, &height11, &nrChannels11, 0);
+	auto tex_7 = stbi_load("../assets/digits/7.jpg", &width12, &height12, &nrChannels12, 0);
+	auto tex_8 = stbi_load("../assets/digits/8.jpg", &width13, &height13, &nrChannels13, 0);
+	auto tex_9 = stbi_load("../assets/digits/9.jpg", &width14, &height14, &nrChannels14, 0);
+
+	if (tex_0 == nullptr || tex_1 == nullptr || tex_2 == nullptr || tex_3 == nullptr || tex_4 == nullptr || tex_5 == nullptr || tex_6 == nullptr || tex_7 == nullptr || tex_8 == nullptr || tex_9 == nullptr)
+	{
+		std::cout << "Failed to load texture" << std::endl;
+		return -1;
+	}
+
+	TextureObject texture_0 = TextureObject(tex_0, width5, height5);
+	TextureObject texture_1 = TextureObject(tex_1, width6, height6);
+	TextureObject texture_2 = TextureObject(tex_2, width7, height7);
+	TextureObject texture_3 = TextureObject(tex_3, width8, height8);
+	TextureObject texture_4 = TextureObject(tex_4, width9, height9);
+	TextureObject texture_5 = TextureObject(tex_5, width10, height10);
+	TextureObject texture_6 = TextureObject(tex_6, width11, height11);
+	TextureObject texture_7 = TextureObject(tex_7, width12, height12);
+	TextureObject texture_8 = TextureObject(tex_8, width13, height13);
+	TextureObject texture_9 = TextureObject(tex_9, width14, height14);
 
 	uint texture;
 	glGenTextures(1, &texture);
@@ -320,6 +359,16 @@ int main(int /* argc */, char ** /* argv */)
 			stbi_image_free(play_button);
 			stbi_image_free(quit_button);
 			stbi_image_free(menu_tex);
+			stbi_image_free(tex_0);
+			stbi_image_free(tex_1);
+			stbi_image_free(tex_2);
+			stbi_image_free(tex_3);
+			stbi_image_free(tex_4);
+			stbi_image_free(tex_5);
+			stbi_image_free(tex_6);
+			stbi_image_free(tex_7);
+			stbi_image_free(tex_8);
+			stbi_image_free(tex_9);
 
 			glfwTerminate();
 			return 0;
@@ -352,17 +401,8 @@ int main(int /* argc */, char ** /* argv */)
 
 			glDisable(GL_LIGHTING);
 			racket.draw();
-			for (int i = 0; i < player.get_life(); i++)
-			{
-				glPushMatrix();
-				glTranslatef(0., -8.0 + 1.2 * i, -8.0);
-				glScalef(0.5, 0.5, 0.5);
-				glColor3f(1.0, 0.0, 0.0);
-				life_ball.drawTex(texture_ball);
-				glPopMatrix();
-			}
-			// TODO : change the way to display the score
-			std::cout << "Score : " << player.get_score() << std::endl;
+			// display life && score
+			player.drawPlayer(texture_0, texture_1, texture_2, texture_3, texture_4, texture_5, texture_6, texture_7, texture_8, texture_9, life_ball, texture_ball);
 		}
 
 		/* Swap front and back buffers */
@@ -473,6 +513,16 @@ int main(int /* argc */, char ** /* argv */)
 	stbi_image_free(play_button);
 	stbi_image_free(quit_button);
 	stbi_image_free(menu_tex);
+	stbi_image_free(tex_0);
+	stbi_image_free(tex_1);
+	stbi_image_free(tex_2);
+	stbi_image_free(tex_3);
+	stbi_image_free(tex_4);
+	stbi_image_free(tex_5);
+	stbi_image_free(tex_6);
+	stbi_image_free(tex_7);
+	stbi_image_free(tex_8);
+	stbi_image_free(tex_9);
 
 	glfwTerminate();
 	return 0;

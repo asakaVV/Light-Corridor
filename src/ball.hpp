@@ -3,14 +3,12 @@
 #include "drawable.hpp"
 #include "texture.hpp"
 
-class Ball : public Drawable
+class Ball
 {
 public:
     Ball();
 
-    void draw() const override;
-
-    void drawTex(const TextureObject &texture);
+    void drawTex(const TextureObject &texture) const;
 
     void set_grip(bool grip);
 

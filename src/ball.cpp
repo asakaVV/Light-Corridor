@@ -5,17 +5,7 @@ Ball::Ball()
 {
 }
 
-void Ball::draw() const
-{
-    glPushMatrix();
-    glTranslatef(_x, _y, _z);
-    glColor3f(1., 1., 1.);
-    drawSphereTex();
-    glPopMatrix();
-    glPushMatrix();
-}
-
-void Ball::drawTex(const TextureObject &texture)
+void Ball::drawTex(const TextureObject &texture) const
 {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.get_width(), texture.get_height(), 0, GL_RGB, GL_UNSIGNED_BYTE, texture.get_image());
     GLfloat light_position[] = {_x, _y, _z, 1.};

@@ -3,7 +3,11 @@
 #define _USE_MATH_DEFINES
 #define GL_SILENCE_DEPRECATION
 #include "../third_party/glfw/include/GLFW/glfw3.h"
+#ifdef __APPLE__
 #include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
 #include <iostream>
 #include <cmath>
 

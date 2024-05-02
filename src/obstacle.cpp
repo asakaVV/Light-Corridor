@@ -10,13 +10,16 @@ Obstacle::Obstacle(float depth, float obstacle_depth) : _depth(depth)
 
 void Obstacle::draw() const
 {
+    glDisable(GL_LIGHTING);
     glPushMatrix();
     glTranslatef(_depth, 0.0, 0.0);
     glScalef(10.0, 19.9, 11.9);
     glRotatef(90.0, 0.0, 1.0, 0.0);
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.0, 1.0, 0.0);
     drawEmptySquare();
     glPopMatrix();
+    glColor3f(1.0, 1.0, 1.0);
+    glEnable(GL_LIGHTING);
 
     GLfloat light_spec[] = {1.0, 1.0, 1.0};
     GLfloat amb[] = {0., 0., 0.};
