@@ -7,15 +7,11 @@ Obstacle::Obstacle(float depth, long level) : _depth(depth)
     // Obstacle or Not
     if (Random::get_int(1, 100) <= std::max(0, (int)((100 - floor * 3) - 40)))
     {
-        std::cout << level << " : No Obstacle" << std::endl;
         return;
     }
 
     int obstacle_type = Random::get_int(1, floor);
 
-    std::cout << level << " : " << obstacle_type << "   (" << floor << ")" << std::endl;
-
-    // obstacle_type = 8;
     int type;
 
     switch (obstacle_type)
@@ -102,7 +98,20 @@ Obstacle::Obstacle(float depth, long level) : _depth(depth)
         _parts.push_back(ObstaclePart(0.0, 0.0, 0.0, 0.0, 20.0, 3.0, 0.0, 0.0));
         _parts.push_back(ObstaclePart(0.0, 0.0, 0.0, 0.0, 7.0, 12.0, 0.0, 0.0));
         break;
-    case 7: // Moving Half
+    case 7: // Sizing Center
+        _parts.push_back(ObstaclePart(0.0, 0.0, 0.0, 0.0, 10.0, 6.0, 0.2, 0.2));
+        break;
+    case 8: // Sizing Sides
+        _parts.push_back(ObstaclePart(-5.0, 0.0, 0.0, 0.0, 10.0, 12.0, -0.1, -0.12));
+        _parts.push_back(ObstaclePart(5.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1, 0.12));
+        break;
+    case 9: // Sizing Corners
+        _parts.push_back(ObstaclePart(5.0, 3.0, 0.0, 0.0, 0.1, 0.1, 0.125, 0.069));
+        _parts.push_back(ObstaclePart(-5.0, 3.0, 0.0, 0.0, 10.0, 6.0, -0.125, -0.069));
+        _parts.push_back(ObstaclePart(-5.0, -3.0, 0.0, 0.0, 0.1, 0.1, 0.125, 0.069));
+        _parts.push_back(ObstaclePart(5.0, -3.0, 0.0, 0.0, 10.0, 6.0, -0.125, -0.069));
+        break;
+    case 10: // Moving Half
         type = Random::get_int(1, 4);
         switch (type)
         {
@@ -120,15 +129,53 @@ Obstacle::Obstacle(float depth, long level) : _depth(depth)
             break;
         }
         break;
-    case 8: // Stairs
+    case 11: // Stairs
         type = Random::get_int(1, 4);
-        type = 1;
         switch (type)
         {
-        case 1: // From Left
-            _parts.push_back(ObstaclePart(-9.0, -5.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0));
+        case 1: // From Top Left
+            _parts.push_back(ObstaclePart(-9.0, -5.0, 0.05, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(-7.0, -3.0, 0.1, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(-5.0, -1.0, 0.15, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(-3.0, 1.0, 0.2, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(-1.0, 3.0, 0.25, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(1.0, 5.0, 0.3, 0.0, 2.0, 2.0, 0.0, 0.0));
+            break;
+        case 2: // From Bottom Right
+            _parts.push_back(ObstaclePart(9.0, 5.0, -0.05, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(7.0, 3.0, -0.1, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(5.0, 1.0, -0.15, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(3.0, -1.0, -0.2, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(1.0, -3.0, -0.25, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(-1.0, -5.0, -0.3, 0.0, 2.0, 2.0, 0.0, 0.0));
+            break;
+        case 3: // From Top Right
+            _parts.push_back(ObstaclePart(9.0, -5.0, 0.05, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(7.0, -3.0, 0.1, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(5.0, -1.0, 0.15, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(3.0, 1.0, 0.2, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(1.0, 3.0, 0.25, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(-1.0, 5.0, 0.3, 0.0, 2.0, 2.0, 0.0, 0.0));
+            break;
+        case 4: // From Bottom Left
+            _parts.push_back(ObstaclePart(-9.0, 5.0, -0.05, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(-7.0, 3.0, -0.1, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(-5.0, 1.0, -0.15, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(-3.0, -1.0, -0.2, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(-1.0, -3.0, -0.25, 0.0, 2.0, 2.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(1.0, -5.0, -0.3, 0.0, 2.0, 2.0, 0.0, 0.0));
             break;
         }
+        break;
+    case 12: // Double Moving And Sizing
+        _parts.push_back(ObstaclePart(0.0, 0.0, 0.0, 0.0, 20.0, 6.0, 0.0, 0.1));
+        _parts.push_back(ObstaclePart(0.0, -3.0, 0.1, 0.0, 7.0, 6.0, 0.0, 0.0));
+        _parts.push_back(ObstaclePart(0.0, 3.0, -0.1, 0.0, 7.0, 6.0, 0.0, 0.0));
+        break;
+    case 13: // Slider
+        _parts.push_back(ObstaclePart(0.0, 0.0, 0.0, 0.0, 20.0, 1.0, 0.0, 0.0));
+        _parts.push_back(ObstaclePart(0.0, 0.0, 0.1, 0.0, 10.0, 12.0, 0.0, 0.1));
+        break;
     }
 }
 
