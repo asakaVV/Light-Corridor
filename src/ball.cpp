@@ -18,7 +18,7 @@ void Ball::draw() const
 void Ball::drawTex(const TextureObject &texture)
 {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.get_width(), texture.get_height(), 0, GL_RGB, GL_UNSIGNED_BYTE, texture.get_image());
-    GLfloat light_position[] = {_x, _y, _z};
+    GLfloat light_position[] = {_x, _y, _z, 1.};
     glLightfv(GL_LIGHT1, GL_POSITION, light_position);
     glPushMatrix();
     glTranslatef(_x, _y, _z);
