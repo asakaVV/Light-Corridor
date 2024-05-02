@@ -45,7 +45,23 @@ void Racket::collide(Ball &ball)
     {
         float collision_distance_y = y - _y;
         float collision_distance_z = z + _x;
-        ball.set_speed(-ball_x_speed, collision_distance_y / 10.0, collision_distance_z / 10.0);
+
+        float initial_speed = std::sqrt(ball_x_speed * ball_x_speed + ball_y_speed * ball_y_speed + ball_z_speed * ball_z_speed);
+
+        float new_ball_x_speed = -ball_x_speed;
+        float new_ball_y_speed = collision_distance_y / 10.0;
+        float new_ball_z_speed = collision_distance_z / 10.0;
+
+        float new_speed_magnitude = std::sqrt(new_ball_x_speed * new_ball_x_speed + new_ball_y_speed * new_ball_y_speed + new_ball_z_speed * new_ball_z_speed);
+        new_ball_x_speed /= new_speed_magnitude;
+        new_ball_y_speed /= new_speed_magnitude;
+        new_ball_z_speed /= new_speed_magnitude;
+
+        new_ball_x_speed *= initial_speed;
+        new_ball_y_speed *= initial_speed;
+        new_ball_z_speed *= initial_speed;
+
+        ball.set_speed(new_ball_x_speed, new_ball_y_speed, new_ball_z_speed);
     }
 }
 

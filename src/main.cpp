@@ -139,12 +139,10 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
 	{
-		std::cout << "MOVE" << std::endl;
 		flag_is_moving = 1;
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
 	{
-		std::cout << "STOP" << std::endl;
 		flag_is_moving = 0;
 	}
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS && choice == 1)
@@ -352,10 +350,10 @@ int main(int /* argc */, char ** /* argv */)
 			}
 			if (!ball.get_grip() && flag_is_moving && !Obstacle::do_any_collide(obstacles, racket))
 			{
-				ball.move_with_delta(0.3);
+				ball.move_with_delta(0.5);
 				for (auto &obstacle : obstacles)
 				{
-					obstacle.move(0.3);
+					obstacle.move(0.5);
 				}
 
 				obstacles.erase(std::remove_if(obstacles.begin(), obstacles.end(), [](const Obstacle &obstacle)
