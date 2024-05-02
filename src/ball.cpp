@@ -55,6 +55,11 @@ void Ball::update()
     _x += _x_speed;
     _y += _y_speed;
     _z += _z_speed;
+    if (_x < -1000)
+    {
+        _x = -1000;
+        _x_speed = -_x_speed;
+    }
 }
 
 void Ball::move_with_delta(float delta)

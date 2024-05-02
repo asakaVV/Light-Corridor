@@ -23,6 +23,7 @@
 #include "obstacle.hpp"
 #include "texture.hpp"
 #include "player.hpp"
+#include "random.hpp"
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1000;
@@ -202,6 +203,8 @@ int main(int /* argc */, char ** /* argv */)
 	glPointSize(5.0);
 	glEnable(GL_DEPTH_TEST);
 
+	Random::init();
+
 	Ball ball = Ball();
 	Ball life_ball = Ball();
 	std::vector<Wall> walls = {
@@ -209,14 +212,12 @@ int main(int /* argc */, char ** /* argv */)
 		Wall({-500.0, -10.0, 0.0}, {1000.0, 1.0, 12.0}, 90.0, {0.0, 0.0, 0.7}, Wall::WallType::LEFT),
 		Wall({-500.0, 0.0, 6.0}, {1000.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}, Wall::WallType::TOP),
 		Wall({-500.0, 0.0, -6.0}, {1000.0, 20.0, 1.0}, 0.0, {0.0, 0.0, 0.5}, Wall::WallType::BOTTOM)};
-	std::vector<Obstacle> obstacles = {
-		Obstacle(-20.0, -20.0),
-		Obstacle(-40.0, -40.0),
-		Obstacle(-60.0, -60.0),
-		Obstacle(-80.0, -80.0),
-		Obstacle(-100.0, -100.0),
-	};
-	long obstacle_depth = -100;
+	long level = 50;
+	std::vector<Obstacle> obstacles;
+	for (int i = 1; i < level; i++)
+	{
+		obstacles.push_back(Obstacle(-20 * i, i));
+	}
 	bool has_to_create = false;
 	Racket racket = Racket();
 	Player player = Player();
@@ -430,6 +431,7 @@ int main(int /* argc */, char ** /* argv */)
 			racket.move(pos_y, pos_x, 0.);
 			if (ball.get_grip() && !flag_is_grip)
 			{
+				ball.set_speed(-1., 0., 0.);
 				ball.set_grip(false);
 			}
 			if (ball.get_grip())
@@ -442,10 +444,10 @@ int main(int /* argc */, char ** /* argv */)
 			}
 			if (!ball.get_grip() && flag_is_moving && !Obstacle::do_any_collide(obstacles, racket))
 			{
-				ball.move_with_delta(0.5);
+				ball.move_with_delta(1.0);
 				for (auto &obstacle : obstacles)
 				{
-					if (obstacle.move(0.5))
+					if (obstacle.move(1.0))
 					{
 						player.add_score(1);
 						has_to_create = true;
@@ -459,8 +461,8 @@ int main(int /* argc */, char ** /* argv */)
 
 			if (has_to_create)
 			{
-				obstacle_depth -= 20;
-				obstacles.push_back(Obstacle(obstacles.back().get_depth() - 20.0, obstacle_depth));
+				obstacles.push_back(Obstacle(obstacles.back().get_depth() - 20.0, level));
+				level++;
 				has_to_create = false;
 			}
 

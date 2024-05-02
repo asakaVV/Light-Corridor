@@ -34,7 +34,7 @@ bool ObstaclePart::collide(Ball &ball, float depth)
 
     float x = std::max(depth, std::min(ball_x, depth));
     float y = std::max(_y - _scale_y / 2.0f, std::min(ball_y, _y + _scale_y / 2.0f));
-    float z = std::max(_z - _scale_z / 2.0f, std::min(ball_z, _z + _scale_z / 2.0f));
+    float z = std::max(-_z - _scale_z / 2.0f, std::min(ball_z, -_z + _scale_z / 2.0f));
 
     float distance = std::sqrt((x - ball_x) * (x - ball_x) + (y - ball_y) * (y - ball_y) + (z - ball_z) * (z - ball_z));
 

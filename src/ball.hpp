@@ -31,7 +31,7 @@ private:
     float _y;
     float _z;
     bool _grip;
-    float _x_speed = -0.5;
+    float _x_speed = -1.0;
     float _y_speed = 0.0;
     float _z_speed = 0.0;
 };

@@ -5,12 +5,13 @@
 #include "ball.hpp"
 #include "racket.hpp"
 #include "wall.hpp"
+#include "random.hpp"
 #include <vector>
 
 class Obstacle : public Drawable
 {
 public:
-    Obstacle(float depth, float obstacle_depth);
+    Obstacle(float depth, long level);
 
     void draw() const override;
 

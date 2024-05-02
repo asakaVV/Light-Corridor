@@ -1,11 +1,79 @@
 #include "obstacle.hpp"
 
-Obstacle::Obstacle(float depth, float obstacle_depth) : _depth(depth)
+Obstacle::Obstacle(float depth, long level) : _depth(depth)
 {
-    ObstaclePart part = ObstaclePart(5.0, 0.0, -0.1, 0.0, 10.0, 12.0, 0.0, -0.1);
-    _parts.push_back(part);
-    ObstaclePart part2 = ObstaclePart(0.0, 0.0, 0.0, 0.0, 15.0, 1.0, 0.0, 0.0);
-    _parts.push_back(part2);
+    float floor = std::sqrt(level);
+
+    // Obstacle or Not
+    if (Random::get_int(1, 100) <= std::max(0, (int)((100 - floor * 3) - 40)))
+    {
+        std::cout << level << " : No Obstacle" << std::endl;
+        return;
+    }
+
+    int obstacle_type = Random::get_int(1, floor);
+
+    std::cout << level << " : " << obstacle_type << "   (" << floor << ")" << std::endl;
+
+    obstacle_type = 3;
+    int type;
+
+    switch (obstacle_type)
+    {
+    case 1: // Half
+        type = Random::get_int(1, 4);
+        switch (type)
+        {
+        case 1: // Right
+            _parts.push_back(ObstaclePart(5.0, 0.0, 0.0, 0.0, 10.0, 12.0, 0.0, 0.0));
+            break;
+        case 2: // Left
+            _parts.push_back(ObstaclePart(-5.0, 0.0, 0.0, 0.0, 10.0, 12.0, 0.0, 0.0));
+            break;
+        case 3: // Top
+            _parts.push_back(ObstaclePart(0.0, 3.0, 0.0, 0.0, 20.0, 6.0, 0.0, 0.0));
+            break;
+        case 4: // Bottom
+            _parts.push_back(ObstaclePart(0.0, -3.0, 0.0, 0.0, 20.0, 6.0, 0.0, 0.0));
+            break;
+        }
+        break;
+    case 2: // Corner
+        type = Random::get_int(1, 4);
+        switch (type)
+        {
+        case 1: // Bottom Right
+            _parts.push_back(ObstaclePart(-7.5, 0.0, 0.0, 0.0, 5.0, 12.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(0.0, -4.5, 0.0, 0.0, 20.0, 3.0, 0.0, 0.0));
+            break;
+        case 2: // Bottom Left
+            _parts.push_back(ObstaclePart(7.5, 0.0, 0.0, 0.0, 5.0, 12.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(0.0, -4.5, 0.0, 0.0, 20.0, 3.0, 0.0, 0.0));
+            break;
+        case 3: // Top Left
+            _parts.push_back(ObstaclePart(7.5, 0.0, 0.0, 0.0, 5.0, 12.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(0.0, 4.5, 0.0, 0.0, 20.0, 3.0, 0.0, 0.0));
+            break;
+        case 4: // Top Right
+            _parts.push_back(ObstaclePart(-7.5, 0.0, 0.0, 0.0, 5.0, 12.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(0.0, 4.5, 0.0, 0.0, 20.0, 3.0, 0.0, 0.0));
+            break;
+        }
+        break;
+    case 3: // Chess
+        type = Random::get_int(1, 2);
+        switch (type)
+        {
+        case 1: // 1
+            _parts.push_back(ObstaclePart(5.0, 3.0, 0.0, 0.0, 10.0, 6.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(-5.0, -3.0, 0.0, 0.0, 10.0, 6.0, 0.0, 0.0));
+            break;
+        case 2: // 2
+            _parts.push_back(ObstaclePart(5.0, -3.0, 0.0, 0.0, 10.0, 6.0, 0.0, 0.0));
+            _parts.push_back(ObstaclePart(-5.0, 3.0, 0.0, 0.0, 10.0, 6.0, 0.0, 0.0));
+            break;
+        }
+    }
 }
 
 void Obstacle::draw() const

@@ -43,14 +43,16 @@ void Racket::collide(Ball &ball)
 
     if (distance < 1.0)
     {
+        ball_x_speed += 0.02;
+
         float collision_distance_y = y - _y;
         float collision_distance_z = z + _x;
 
         float initial_speed = std::sqrt(ball_x_speed * ball_x_speed + ball_y_speed * ball_y_speed + ball_z_speed * ball_z_speed);
 
         float new_ball_x_speed = -ball_x_speed;
-        float new_ball_y_speed = collision_distance_y / 10.0;
-        float new_ball_z_speed = collision_distance_z / 10.0;
+        float new_ball_y_speed = collision_distance_y / 5.0;
+        float new_ball_z_speed = collision_distance_z / 5.0;
 
         float new_speed_magnitude = std::sqrt(new_ball_x_speed * new_ball_x_speed + new_ball_y_speed * new_ball_y_speed + new_ball_z_speed * new_ball_z_speed);
         new_ball_x_speed /= new_speed_magnitude;
