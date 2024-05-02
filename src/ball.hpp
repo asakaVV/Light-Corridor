@@ -26,6 +26,8 @@ public:
 
     void get_position(float &x, float &y, float &z) const;
 
+    float get_x() const { return _x; }
+
 private:
     float _x;
     float _y;

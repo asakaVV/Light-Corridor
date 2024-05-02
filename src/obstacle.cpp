@@ -233,11 +233,11 @@ void Obstacle::collide(Ball &ball)
     }
 }
 
-bool Obstacle::do_collide(Racket &racket) const
+bool Obstacle::do_collide(Racket &racket, float limit) const
 {
     for (const auto &part : _parts)
     {
-        if (_depth > -1 && part.do_collide(racket))
+        if (_depth > limit && part.do_collide(racket))
         {
             return true;
         }
@@ -246,11 +246,11 @@ bool Obstacle::do_collide(Racket &racket) const
     return false;
 }
 
-bool Obstacle::do_any_collide(const std::vector<Obstacle> &obstacles, Racket &racket)
+bool Obstacle::do_any_collide(const std::vector<Obstacle> &obstacles, Racket &racket, float limit)
 {
     for (const auto &obstacle : obstacles)
     {
-        if (obstacle.do_collide(racket))
+        if (obstacle.do_collide(racket, limit))
         {
             return true;
         }

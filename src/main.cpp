@@ -442,7 +442,12 @@ int main(int /* argc */, char ** /* argv */)
 			{
 				ball.update();
 			}
-			if (!ball.get_grip() && flag_is_moving && !Obstacle::do_any_collide(obstacles, racket))
+			float limit = -2.0;
+			if (ball.get_x() > -2.0)
+			{
+				limit = -4;
+			}
+			if (!ball.get_grip() && flag_is_moving && !Obstacle::do_any_collide(obstacles, racket, limit))
 			{
 				ball.move_with_delta(1.0);
 				for (auto &obstacle : obstacles)

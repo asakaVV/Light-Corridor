@@ -21,9 +21,9 @@ public:
 
     void collide(Ball &ball);
 
-    bool do_collide(Racket &racket) const;
+    bool do_collide(Racket &racket, float limit) const;
 
-    static bool do_any_collide(const std::vector<Obstacle> &obstacles, Racket &racket);
+    static bool do_any_collide(const std::vector<Obstacle> &obstacles, Racket &racket, float limit);
 
     void evolve();
 
