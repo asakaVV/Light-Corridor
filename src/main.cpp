@@ -25,6 +25,7 @@
 #include "player.hpp"
 #include "random.hpp"
 #include "bonus.hpp"
+#include <algorithm>
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1000;
