@@ -23,7 +23,7 @@ void Racket::move(float x, float y, float z)
     _z = z;
 }
 
-void Racket::collide(Ball &ball)
+bool Racket::collide(Ball &ball)
 {
     float ball_x, ball_y, ball_z;
     ball.get_position(ball_x, ball_y, ball_z);
@@ -32,7 +32,7 @@ void Racket::collide(Ball &ball)
 
     if (ball_x_speed < 0)
     {
-        return;
+        return false;
     }
 
     // TODO : il faut améliorer la détection de collision
@@ -78,6 +78,7 @@ void Racket::collide(Ball &ball)
         //     ball.move(-1.1, ball_y, ball_z);
         // }
     }
+    return false;
 }
 
 void Racket::get_position(float &x, float &y, float &z) const

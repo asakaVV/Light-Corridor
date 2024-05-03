@@ -12,7 +12,7 @@ public:
 
     void draw() const override;
 
-    void collide(Ball &ball);
+    bool collide(Ball &ball);
 
     void get_position(float &x, float &y, float &z) const;
 

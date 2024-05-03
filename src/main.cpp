@@ -24,6 +24,7 @@
 #include "texture.hpp"
 #include "player.hpp"
 #include "random.hpp"
+#include "bonus.hpp"
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1000;
@@ -221,6 +222,16 @@ int main(int /* argc */, char ** /* argv */)
 	bool has_to_create = false;
 	Racket racket = Racket();
 	Player player = Player();
+	std::vector<Bonus> bonus;
+	for (int i = 1; i < 30; i++)
+	{
+		if (Random::get_int(1, 50) == 1)
+			bonus.push_back(Bonus((i * -20) - 10, Random::get_int(-8, 8), Random::get_int(-4, 4), Random::get_int(1, 2)));
+		else
+		{
+			bonus.push_back(Bonus((i * -20) - 10, 0, 0, 0));
+		}
+	}
 
 	int width, height, nrChannels;
 	int width2, height2, nrChannels2;
@@ -312,8 +323,6 @@ int main(int /* argc */, char ** /* argv */)
 	TextureObject texture_quit = TextureObject(quit_button, width3, height3);
 	TextureObject texture_menu = TextureObject(menu_tex, width4, height4);
 
-	// glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -400,10 +409,23 @@ int main(int /* argc */, char ** /* argv */)
 				obstacle.draw();
 			}
 
+			for (auto bonus_ : bonus)
+			{
+				bonus_.draw();
+			}
+
 			glDisable(GL_LIGHTING);
 			racket.draw();
 			// display life && score
 			player.drawPlayer(texture_0, texture_1, texture_2, texture_3, texture_4, texture_5, texture_6, texture_7, texture_8, texture_9, life_ball, texture_ball);
+			if (flag_is_grip && !ball.get_grip())
+			{
+				Bonus bonus_pickup = Bonus(0, 8., -8., 2);
+				glPushMatrix();
+				glColor3f(1., 1., 1.);
+				bonus_pickup.draw();
+				glPopMatrix();
+			}
 		}
 
 		/* Swap front and back buffers */
@@ -458,10 +480,17 @@ int main(int /* argc */, char ** /* argv */)
 						has_to_create = true;
 					}
 				}
+				for (auto &bonus_ : bonus)
+				{
+					bonus_.move(1.0);
+				}
 
 				obstacles.erase(std::remove_if(obstacles.begin(), obstacles.end(), [](const Obstacle &obstacle)
 											   { return obstacle.has_to_despawn(); }),
 								obstacles.end());
+				bonus.erase(std::remove_if(bonus.begin(), bonus.end(), [](const Bonus &bonus)
+										   { return bonus.get_x() > 0; }),
+							bonus.end());
 			}
 
 			if (has_to_create)
@@ -469,6 +498,16 @@ int main(int /* argc */, char ** /* argv */)
 				obstacles.push_back(Obstacle(obstacles.back().get_depth() - 20.0, level));
 				level++;
 				has_to_create = false;
+			}
+
+			if (bonus.size() < 29)
+			{
+				if (Random::get_int(1, 50) == 1)
+					bonus.push_back(Bonus(bonus.back().get_x() - 20, Random::get_int(-8, 8), Random::get_int(-4, 4), Random::get_int(1, 2)));
+				else
+				{
+					bonus.push_back(Bonus(bonus.back().get_x() - 20, 0, 0, 0));
+				}
 			}
 
 			for (auto &obstacle : obstacles)
@@ -479,7 +518,10 @@ int main(int /* argc */, char ** /* argv */)
 			// Collision detection
 			if (!ball.get_grip())
 			{
-				racket.collide(ball);
+				if (racket.collide(ball) && flag_is_grip && !ball.get_grip())
+				{
+					ball.set_grip(true);
+				}
 				for (auto &wall : walls)
 				{
 					wall.collide(ball);
@@ -487,6 +529,18 @@ int main(int /* argc */, char ** /* argv */)
 				for (auto &obstacle : obstacles)
 				{
 					obstacle.collide(ball);
+				}
+				for (auto &bonus_ : bonus)
+				{
+					int bonus_get = bonus_.collide(racket);
+					if (bonus_get == 1 && player.get_life() < 5)
+					{
+						player.set_life(player.get_life() + 1);
+					}
+					else if (bonus_get == 2 && !flag_is_grip)
+					{
+						flag_is_grip = true;
+					}
 				}
 			}
 			for (auto &wall : walls)

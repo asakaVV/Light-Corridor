@@ -265,7 +265,6 @@ void drawSquareTex()
 }
 
 void drawMultiSquare(int nbSquareWidth, int nbSquareHeight)
-
 {
 	float step_x = 1.0 / nbSquareWidth;
 	float step_y = 1.0 / nbSquareHeight;
@@ -281,4 +280,45 @@ void drawMultiSquare(int nbSquareWidth, int nbSquareHeight)
 			glPopMatrix();
 		}
 	}
+}
+
+void drawCube()
+{
+	// Front face
+	drawMultiSquare(4, 4);
+
+	// Back face
+	glPushMatrix();
+	glTranslatef(0.0, 0.0, -1.0);
+	glRotatef(180.0, 0.0, 1.0, 0.0);
+	drawMultiSquare(4, 4);
+	glPopMatrix();
+
+	// Left face
+	glPushMatrix();
+	glTranslatef(-0.5, 0.0, -0.5);
+	glRotatef(-90.0, 0.0, 1.0, 0.0);
+	drawMultiSquare(4, 4);
+	glPopMatrix();
+
+	// Right face
+	glPushMatrix();
+	glTranslatef(0.5, 0.0, -0.5);
+	glRotatef(90.0, 0.0, 1.0, 0.0);
+	drawMultiSquare(4, 4);
+	glPopMatrix();
+
+	// Top face
+	glPushMatrix();
+	glTranslatef(0.0, 0.5, -0.5);
+	glRotatef(-90.0, 1.0, 0.0, 0.0);
+	drawMultiSquare(4, 4);
+	glPopMatrix();
+
+	// Bottom face
+	glPushMatrix();
+	glTranslatef(0.0, -0.5, -0.5);
+	glRotatef(90.0, 1.0, 0.0, 0.0);
+	drawMultiSquare(4, 4);
+	glPopMatrix();
 }

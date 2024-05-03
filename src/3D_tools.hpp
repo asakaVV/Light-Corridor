@@ -44,3 +44,5 @@ void drawSphereTex();
 void drawSquareTex();
 
 void drawMultiSquare(int nbSquareWidth, int nbSquareHeight);
+
+void drawCube();
