@@ -77,6 +77,7 @@ bool Racket::collide(Ball &ball)
         // {
         //     ball.move(-1.1, ball_y, ball_z);
         // }
+        return true;
     }
     return false;
 }

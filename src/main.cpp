@@ -373,6 +373,26 @@ int main(int /* argc */, char ** /* argv */)
 		else if (choice == 3)
 		{
 			choice = drawEndMenu(player, texture_end, texture_quit, texture_retry, texture_0, texture_1, texture_2, texture_3, texture_4, texture_5, texture_6, texture_7, texture_8, texture_9, pos_x, pos_y, flag_is_moving);
+			if (choice == 1)
+			{
+				level = 50;
+				obstacles.clear();
+				for (int i = 1; i < level; i++)
+				{
+					obstacles.push_back(Obstacle(-20 * i, i));
+				}
+				has_to_create = false;
+				bonus.clear();
+				for (int i = 1; i < 30; i++)
+				{
+					if (Random::get_int(1, 50) == 1)
+						bonus.push_back(Bonus((i * -20) - 10, Random::get_int(-8, 8), Random::get_int(-4, 4), Random::get_int(1, 2)));
+					else
+					{
+						bonus.push_back(Bonus((i * -20) - 10, 0, 0, 0));
+					}
+				}
+			}
 		}
 		else if (choice == 1)
 		{

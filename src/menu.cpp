@@ -132,7 +132,6 @@ int drawEndMenu(Player &player, const TextureObject &menu, const TextureObject &
     glPopMatrix();
     glPushMatrix();
     glTranslatef(-2.5, -3., 0.);
-    std::cout << pos_x << " " << pos_y << std::endl;
     if (pos_x > -4.5 && pos_x < -0.5 && pos_y >= 2. && pos_y < 4.)
     {
         draw_hover_button(retry);
