@@ -35,11 +35,6 @@ static float aspectRatio = 1.0;
 /* Minimal time wanted between two images */
 static const double FRAMERATE_IN_SECONDS = 1. / 60.;
 
-/* IHM flag */
-static int flag_filaire = 0;
-static int flag_animate_rot_scale = 0;
-static int flag_animate_rot_arm = 0;
-
 /* Gameplay flags */
 static int flag_is_moving = 0;
 static bool flag_is_grip = true;
@@ -268,10 +263,7 @@ int main(int /* argc */, char ** /* argv */)
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		if (flag_filaire)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		else
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
