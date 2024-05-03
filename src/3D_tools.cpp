@@ -36,11 +36,6 @@ struct v3d
 		this->z = b.x * c.y - b.y * c.x;
 	}
 
-	void display()
-	{
-		std::cout << "V :" << x << " / " << y << " / " << z << std::endl;
-	}
-
 	float dot(v3d a)
 	{
 		return (this->x * a.x + this->y * a.y + this->z * a.z);

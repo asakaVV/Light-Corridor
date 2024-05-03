@@ -68,74 +68,8 @@ void onWindowResized(GLFWwindow * /* window */, int width, int height)
 
 void onKey(GLFWwindow *window, int key, int /* scancode */, int action, int /* mods */)
 {
-	int is_pressed = (action == GLFW_PRESS);
-	switch (key)
-	{
-	case GLFW_KEY_A:
-	case GLFW_KEY_ESCAPE:
-		if (is_pressed)
-			glfwSetWindowShouldClose(window, GLFW_TRUE);
-		break;
-	case GLFW_KEY_F:
-		if (is_pressed)
-		{
-			flag_filaire = !flag_filaire;
-			std::cout << "Mode filaire : " << ((flag_filaire) ? "ON" : "OFF") << std::endl;
-		}
-		break;
-	case GLFW_KEY_R:
-		if (is_pressed)
-			flag_animate_rot_arm = 1 - flag_animate_rot_arm;
-		break;
-	case GLFW_KEY_T:
-		if (is_pressed)
-			flag_animate_rot_scale = 1 - flag_animate_rot_scale;
-		break;
-	case GLFW_KEY_J:
-		if (dist_zoom < 60.0f)
-			dist_zoom *= 1.1;
-		std::cout << "Zoom is " << dist_zoom << std::endl;
-		break;
-	case GLFW_KEY_I:
-		if (dist_zoom > 1.0f)
-			dist_zoom *= 0.9;
-		std::cout << "Zoom is " << dist_zoom << std::endl;
-		break;
-	case GLFW_KEY_UP:
-		if (phy > 2)
-			phy -= 2;
-		std::cout << "Phy : " << phy << std::endl;
-		break;
-	case GLFW_KEY_DOWN:
-		if (phy <= 88.)
-			phy += 2;
-		std::cout << "Phy : " << phy << std::endl;
-		break;
-	case GLFW_KEY_LEFT:
-		theta -= 5;
-		break;
-	case GLFW_KEY_RIGHT:
-		theta += 5;
-		break;
-	case GLFW_KEY_O:
-		if (is_pressed)
-			choice = abs(choice - 2);
-		break;
-	case GLFW_KEY_K:
-		if (is_pressed)
-			choice = abs(choice - 1);
-		break;
-	case GLFW_KEY_L:
-		if (is_pressed)
-			choice = abs(choice - 2);
-		break;
-	case GLFW_KEY_M:
-		if (is_pressed)
-			choice = abs(choice - 1);
-		break;
-	default:
-		std::cout << "Touche non gérée" << std::endl;
-	}
+	if ((key == GLFW_KEY_A || key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS))
+		glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
@@ -249,10 +183,6 @@ int main(int /* argc */, char ** /* argv */)
 	{
 		std::cout << "Failed to load texture" << std::endl;
 		return -1;
-	}
-	else
-	{
-		std::cout << "Image loaded with width: " << width << " and height: " << height << std::endl;
 	}
 
 	// digits loading
@@ -565,7 +495,7 @@ int main(int /* argc */, char ** /* argv */)
 			float ball_x, ball_y, ball_z;
 			ball.get_position(ball_x, ball_y, ball_z);
 
-			if (ball_x > 5.)
+			if (ball_x > 1.)
 			{
 				player.set_life(player.get_life() - 1);
 				ball.set_grip(true);
