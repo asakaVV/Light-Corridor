@@ -36,12 +36,12 @@ void Racket::collide(Ball &ball)
     }
 
     // TODO : il faut améliorer la détection de collision
-    bool negative = false;
-    if (ball_x > 0)
-    {
-        negative = true;
-        ball_x = 0;
-    }
+    // bool negative = false;
+    // if (ball_x > 0)
+    // {
+    //     negative = true;
+    //     ball_x = 0;
+    // }
 
     float x = std::max(_z, std::min(ball_x, _z));
     float y = std::max(_y - _scale_y / 2.0f, std::min(ball_y, _y + _scale_y / 2.0f));
@@ -73,10 +73,10 @@ void Racket::collide(Ball &ball)
 
         ball.set_speed(new_ball_x_speed, new_ball_y_speed, new_ball_z_speed);
 
-        if (negative)
-        {
-            ball.move(-1.1, ball_y, ball_z);
-        }
+        // if (negative)
+        // {
+        //     ball.move(-1.1, ball_y, ball_z);
+        // }
     }
 }
 
