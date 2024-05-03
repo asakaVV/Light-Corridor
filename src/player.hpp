@@ -14,6 +14,8 @@ public:
     void add_score(int score);
     void display_score(const TextureObject &texture) const;
     void drawPlayer(const TextureObject &texture_0, const TextureObject &texture1, const TextureObject &texture2, const TextureObject &texture3, const TextureObject &texture4, const TextureObject &texture5, const TextureObject &texture6, const TextureObject &texture7, const TextureObject &texture8, const TextureObject &texture9, const Ball &life_ball, const TextureObject &texture_ball) const;
+    void drawScore(const TextureObject &texture_0, const TextureObject &texture1, const TextureObject &texture2, const TextureObject &texture3, const TextureObject &texture4, const TextureObject &texture5, const TextureObject &texture6, const TextureObject &texture7, const TextureObject &texture8, const TextureObject &texture9) const;
+    void reset();
 
 private:
     int _life;

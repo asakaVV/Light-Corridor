@@ -237,12 +237,15 @@ int main(int /* argc */, char ** /* argv */)
 	int width2, height2, nrChannels2;
 	int width3, height3, nrChannels3;
 	int width4, height4, nrChannels4;
+	int endw, endh, endc;
 	auto ball_tex = stbi_load("../assets/steel.jpg", &width, &height, &nrChannels, 0);
 	auto play_button = stbi_load("../assets/Play.jpg", &width2, &height2, &nrChannels2, 0);
 	auto quit_button = stbi_load("../assets/Quit.jpg", &width3, &height3, &nrChannels3, 0);
 	auto menu_tex = stbi_load("../assets/menu.jpg", &width4, &height4, &nrChannels4, 0);
+	auto end_tex = stbi_load("../assets/end.jpg", &endw, &endh, &endc, 0);
+	auto retry_button = stbi_load("../assets/Retry.jpg", &width2, &height2, &nrChannels2, 0);
 
-	if (ball_tex == nullptr || play_button == nullptr || quit_button == nullptr || menu_tex == nullptr)
+	if (ball_tex == nullptr || play_button == nullptr || quit_button == nullptr || menu_tex == nullptr || end_tex == nullptr || retry_button == nullptr)
 	{
 		std::cout << "Failed to load texture" << std::endl;
 		return -1;
@@ -322,6 +325,8 @@ int main(int /* argc */, char ** /* argv */)
 	TextureObject texture_play = TextureObject(play_button, width2, height2);
 	TextureObject texture_quit = TextureObject(quit_button, width3, height3);
 	TextureObject texture_menu = TextureObject(menu_tex, width4, height4);
+	TextureObject texture_end = TextureObject(end_tex, endw, endh);
+	TextureObject texture_retry = TextureObject(retry_button, width2, height2);
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -363,25 +368,11 @@ int main(int /* argc */, char ** /* argv */)
 		}
 		else if (choice == 2)
 		{
-			glBindTexture(GL_TEXTURE_2D, 0);
-			glDeleteTextures(1, &texture);
-			stbi_image_free(ball_tex);
-			stbi_image_free(play_button);
-			stbi_image_free(quit_button);
-			stbi_image_free(menu_tex);
-			stbi_image_free(tex_0);
-			stbi_image_free(tex_1);
-			stbi_image_free(tex_2);
-			stbi_image_free(tex_3);
-			stbi_image_free(tex_4);
-			stbi_image_free(tex_5);
-			stbi_image_free(tex_6);
-			stbi_image_free(tex_7);
-			stbi_image_free(tex_8);
-			stbi_image_free(tex_9);
-
-			glfwTerminate();
-			return 0;
+			break;
+		}
+		else if (choice == 3)
+		{
+			choice = drawEndMenu(player, texture_end, texture_quit, texture_retry, texture_0, texture_1, texture_2, texture_3, texture_4, texture_5, texture_6, texture_7, texture_8, texture_9, pos_x, pos_y, flag_is_moving);
 		}
 		else if (choice == 1)
 		{
@@ -563,7 +554,7 @@ int main(int /* argc */, char ** /* argv */)
 			}
 			if (player.get_life() < 0)
 			{
-				break;
+				choice = 3;
 			}
 		}
 	}
@@ -584,6 +575,8 @@ int main(int /* argc */, char ** /* argv */)
 	stbi_image_free(tex_7);
 	stbi_image_free(tex_8);
 	stbi_image_free(tex_9);
+	stbi_image_free(end_tex);
+	stbi_image_free(retry_button);
 
 	glfwTerminate();
 	return 0;
