@@ -277,20 +277,7 @@ int main(int /* argc */, char ** /* argv */)
 		glLoadIdentity();
 		setCamera();
 
-		/* Initial scenery setup */
-		glPushMatrix();
-		glTranslatef(0.0, 0.0, -0.01);
-		glScalef(10.0, 10.0, 1.0);
-		glColor3f(0.0, 0.0, 0.1);
-		// drawSquare();
-		glBegin(GL_POINTS);
-		glColor3f(1.0, 1.0, 0.0);
-		glVertex3f(0.0, 0.0, 0.0);
-		glEnd();
-		glPopMatrix();
-
 		/* Scene rendering */
-		draw_scene();
 
 		if (choice == 0)
 		{

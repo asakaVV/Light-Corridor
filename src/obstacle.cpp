@@ -10,7 +10,7 @@ Obstacle::Obstacle(float depth, long level) : _depth(depth)
         return;
     }
 
-    int obstacle_type = Random::get_int(1, floor);
+    int obstacle_type = Random::get_int(1, std::min(13, (int)floor));
 
     int type;
 
